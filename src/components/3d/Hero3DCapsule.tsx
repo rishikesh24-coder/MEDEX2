@@ -1,11 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { RotateCw, Sparkles, ShieldCheck, Flame } from 'lucide-react';
 
 export const Hero3DCapsule: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeStream, setActiveStream] = useState<'both' | 'redistribution' | 'waste'>('both');
-  const [rotationSpeed, setRotationSpeed] = useState(1);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -203,7 +200,7 @@ export const Hero3DCapsule: React.FC = () => {
       orbitalHalo.rotation.z = elapsedTime * 0.4;
 
       // Base rotation + mouse dampening
-      capsuleGroup.rotation.y += 0.008 * rotationSpeed;
+      capsuleGroup.rotation.y += 0.008;
       mainGroup.rotation.x += (targetRotationX - mainGroup.rotation.x) * 0.05;
       mainGroup.rotation.y += (targetRotationY - mainGroup.rotation.y) * 0.05;
 
@@ -252,44 +249,26 @@ export const Hero3DCapsule: React.FC = () => {
         container.removeChild(renderer.domElement);
       }
     };
-  }, [rotationSpeed]);
+  }, []);
 
   return (
     <div className="relative w-full h-[460px] flex items-center justify-center select-none">
-      {/* Background radial glow */}
-      <div className="absolute inset-0 bg-radial from-teal-500/15 via-transparent to-transparent pointer-events-none rounded-full blur-2xl" />
+      {/* Background soft ambient radial glow */}
+      <div className="absolute inset-0 bg-radial from-teal-500/10 via-transparent to-transparent pointer-events-none rounded-full blur-3xl" />
 
       {/* ThreeJS Container */}
       <div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing relative z-10" />
 
-      {/* Floating 3D HUD Tags */}
-      <div className="absolute top-4 left-4 z-20 pointer-events-none">
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-slate-200/80 shadow-spatial text-[11px] font-mono text-teal-950 font-semibold">
-          <Sparkles className="w-3.5 h-3.5 text-teal-600 animate-spin" />
-          <span>ZERO-GRAVITY MOLECULAR STREAM</span>
+      {/* Clean Minimal Two-Color Indicator */}
+      <div className="absolute bottom-2 left-0 right-0 flex items-center justify-center gap-6 z-20 pointer-events-none">
+        <div className="flex items-center gap-2 text-xs font-medium text-slate-600 bg-white/80 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-slate-200/60 shadow-2xs">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 shadow-xs" />
+          <span>Surplus Redistribution</span>
         </div>
-      </div>
-
-      {/* Stream Legends */}
-      <div className="absolute bottom-4 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-auto">
-        <div className="flex items-center gap-2">
-          <div className="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 backdrop-blur-md text-[10px] font-mono font-bold text-emerald-800 flex items-center gap-1.5 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>REDISTRIBUTION STREAM</span>
-          </div>
-          <div className="px-2.5 py-1 rounded-lg bg-amber-500/15 border border-amber-500/30 backdrop-blur-md text-[10px] font-mono font-bold text-amber-900 flex items-center gap-1.5 shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-            <span>BIO-WASTE CUSTODY</span>
-          </div>
+        <div className="flex items-center gap-2 text-xs font-medium text-slate-600 bg-white/80 backdrop-blur-sm px-3.5 py-1.5 rounded-full border border-slate-200/60 shadow-2xs">
+          <span className="w-2 h-2 rounded-full bg-amber-500 shadow-xs" />
+          <span>Biomedical Waste</span>
         </div>
-
-        <button
-          onClick={() => setRotationSpeed((prev) => (prev === 1 ? 2.5 : 1))}
-          className="px-2.5 py-1 rounded-lg bg-white/80 hover:bg-white border border-slate-200/80 backdrop-blur-md text-[10px] font-mono text-slate-700 font-semibold shadow-xs flex items-center gap-1 transition-all"
-        >
-          <RotateCw className="w-3 h-3 text-teal-700" />
-          <span>{rotationSpeed > 1 ? '1x Normal' : '2.5x Spin'}</span>
-        </button>
       </div>
     </div>
   );

@@ -160,12 +160,12 @@
   animation: float-slow 20s ease-in-out 4s infinite reverse;
 }
 
-/* Subtle grid backdrop */
+/* Subtle clinical grid backdrop - ultra-faint felt-not-seen */
 .bg-clinical-grid {
-  background-size: 28px 28px;
+  background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(226, 232, 240, 0.5) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(226, 232, 240, 0.5) 1px, transparent 1px);
+    linear-gradient(to right, rgba(226, 232, 240, 0.18) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(226, 232, 240, 0.18) 1px, transparent 1px);
 }
 
 /* Laser Route Pulse */

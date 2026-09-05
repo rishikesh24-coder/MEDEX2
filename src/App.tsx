@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Header } from './components/common/Header';
 import { ToastContainer } from './components/common/Toast';
+import { DemoPersonaPill } from './components/common/DemoPersonaPill';
 import { AddMedicineModal } from './components/hospital/AddMedicineModal';
 
 // Public Pages
@@ -104,6 +105,7 @@ const AppContent: React.FC = () => {
       </main>
 
       <ToastContainer />
+      <DemoPersonaPill />
 
       <AddMedicineModal
         isOpen={isAddMedicineOpen}

@@ -54,7 +54,7 @@ export interface MedicineItem {
   billPdfUrl: string;
   status: 'available' | 'reserved' | 'regulatory_lockout' | 'routed_to_disposal';
   isNearExpiry: boolean;
-  category: 'Critical Care / Antibiotic' | 'Endocrinology' | 'Anticoagulant' | 'Oncology' | 'Cardiology';
+  category: 'Critical Care / Antibiotic' | 'Endocrinology' | 'Anticoagulant' | 'Oncology' | 'Cardiology' | 'Gastroenterology';
 }
 
 export interface PaymentDetails {

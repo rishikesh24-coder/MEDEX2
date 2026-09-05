@@ -332,6 +332,30 @@ export const INITIAL_MEDICINES: MedicineItem[] = [
     status: 'available',
     isNearExpiry: false,
     category: 'Critical Care / Antibiotic'
+  },
+  {
+    id: 'med_9',
+    hospitalId: 'hosp_fortis',
+    hospitalName: 'Fortis Memorial Research Institute',
+    hospitalLocation: 'Sector 44, Gurugram (18.4 km away)',
+    brandName: 'Pantocid 40mg IV',
+    genericComposition: 'Pantoprazole Sodium for Injection 40mg',
+    dosageForm: 'Vial / Injection',
+    strength: '40mg IV Vial',
+    storageCondition: 'Ambient (15-25°C)',
+    batchNumber: 'PT-2024-402',
+    manufacturingDate: '2024-05-01',
+    expiryDate: '2026-10-20',
+    totalUnits: 450,
+    availableUnits: 340,
+    mrpPerUnit: 62,
+    concessionPercentage: 50,
+    transferPricePerUnit: 31,
+    billNumber: 'INV-SUN-PT-402',
+    billPdfUrl: 'BILL-SUN-PANTOCID.pdf',
+    status: 'available',
+    isNearExpiry: false,
+    category: 'Gastroenterology'
   }
 ];
 

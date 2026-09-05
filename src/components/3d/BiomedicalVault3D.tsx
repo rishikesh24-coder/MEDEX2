@@ -39,24 +39,24 @@ export const BiomedicalVault3D: React.FC<BiomedicalVault3DProps> = ({ manifests 
   };
 
   return (
-    <div className="relative w-full rounded-2xl border border-amber-200/80 bg-gradient-to-b from-white to-amber-50/20 shadow-spatial-amber p-6 sm:p-8 space-y-6 overflow-hidden">
+    <div className="relative w-full rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl p-6 sm:p-8 space-y-6 overflow-hidden">
       {/* Top Biohazard Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-amber-200">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-300 font-mono text-xs font-bold uppercase tracking-wider">
-            <Flame className="w-3.5 h-3.5 text-amber-700 animate-pulse" />
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/60 text-amber-300 border border-amber-700/50 font-mono text-xs font-bold uppercase tracking-wider">
+            <Flame className="w-3.5 h-3.5 text-amber-400 animate-pulse" />
             CPCB HAZARDOUS BIO-MEDICAL DECONTAMINATION TERMINAL
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-slate-900 font-display mt-2">
+          <h2 className="text-xl sm:text-2xl font-bold text-white font-display mt-2">
             3D Pressurized Containment Vault
           </h2>
-          <p className="text-xs text-slate-600 mt-0.5">
+          <p className="text-xs text-slate-400 mt-0.5">
             Hermetically sealed hazardous lockbox preventing bio-leakage prior to 1200°C dual-chamber incineration.
           </p>
         </div>
 
         <div className="flex items-center gap-2">
-          <div className="px-3 py-1.5 rounded-xl bg-slate-900 text-white font-mono text-xs flex items-center gap-2 shadow-md">
+          <div className="px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 text-white font-mono text-xs flex items-center gap-2 shadow-md">
             <Gauge className="w-4 h-4 text-amber-400" />
             <span>CHAMBER: {pressurePsi.toFixed(1)} PSI</span>
           </div>
@@ -142,13 +142,13 @@ export const BiomedicalVault3D: React.FC<BiomedicalVault3DProps> = ({ manifests 
         <div className="lg:col-span-6 space-y-5 text-xs">
           {/* Batch Selector */}
           <div>
-            <label className="block font-semibold text-slate-700 mb-1.5 uppercase tracking-wider text-[11px]">
+            <label className="block font-semibold text-slate-300 mb-1.5 uppercase tracking-wider text-[11px]">
               Select Waste Batch for Containment Vault Verification:
             </label>
             <select
               value={selectedManifestId}
               onChange={(e) => setSelectedManifestId(e.target.value)}
-              className="w-full font-medium p-2.5 rounded-xl border border-slate-300 bg-white font-mono text-xs focus:ring-2 focus:ring-amber-600"
+              className="w-full font-medium p-2.5 rounded-xl border border-slate-700 bg-slate-950 text-slate-100 font-mono text-xs focus:ring-2 focus:ring-amber-500"
             >
               {manifests.map((m) => (
                 <option key={m.id} value={m.id}>
@@ -159,51 +159,51 @@ export const BiomedicalVault3D: React.FC<BiomedicalVault3DProps> = ({ manifests 
           </div>
 
           {activeManifest && (
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
               <div className="flex justify-between items-start">
                 <div>
-                  <div className="font-bold text-sm text-slate-900">{activeManifest.medicineName}</div>
-                  <div className="text-[11px] text-slate-500 font-mono">
+                  <div className="font-bold text-sm text-white">{activeManifest.medicineName}</div>
+                  <div className="text-[11px] text-slate-400 font-mono">
                     Batch: {activeManifest.batchNumber} • Expiry: {activeManifest.expiryDate}
                   </div>
                 </div>
-                <span className="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                <span className="px-2 py-0.5 rounded font-mono text-[10px] font-bold bg-amber-950/60 text-amber-300 border border-amber-700/50">
                   {activeManifest.weightKg} KG MASS
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200 text-[11px]">
+              <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-800 text-[11px]">
                 <div>
                   <span className="text-slate-400 text-[10px] uppercase block">Condemnation Reason:</span>
-                  <strong className="text-rose-700">{activeManifest.reason}</strong>
+                  <strong className="text-rose-400">{activeManifest.reason}</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] uppercase block">Target Neutralization:</span>
-                  <strong className="text-amber-800">{activeManifest.destructionMethod}</strong>
+                  <strong className="text-amber-400">{activeManifest.destructionMethod}</strong>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] uppercase block">Treatment Facility:</span>
-                  <span className="text-slate-700">{activeManifest.treatmentFacility.split('(')[0]}</span>
+                  <span className="text-slate-300">{activeManifest.treatmentFacility.split('(')[0]}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] uppercase block">Authorized Carrier:</span>
-                  <span className="text-slate-700">{activeManifest.courierPartner.split(' ')[0]}</span>
+                  <span className="text-slate-300">{activeManifest.courierPartner.split(' ')[0]}</span>
                 </div>
               </div>
             </div>
           )}
 
           {/* Action Trigger */}
-          <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-300 space-y-3">
+          <div className="p-4 rounded-xl bg-amber-950/30 border border-amber-800/50 text-amber-200 space-y-3">
             <div className="flex items-center justify-between text-xs">
-              <div className="font-bold text-amber-950 flex items-center gap-1.5">
-                <CheckCircle2 className="w-4 h-4 text-amber-700" />
+              <div className="font-bold text-amber-200 flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-amber-400" />
                 Hermetic Safety Valve Active
               </div>
-              <span className="font-mono text-[10px] text-amber-800 font-bold">VACUUM VERIFIED</span>
+              <span className="font-mono text-[10px] text-amber-300 font-bold">VACUUM VERIFIED</span>
             </div>
 
-            <p className="text-[11px] text-amber-900/80 leading-relaxed">
+            <p className="text-[11px] text-amber-200/90 leading-relaxed">
               Initiate an airlock purge to simulate chamber depressurization and generate a cryptographic tamper-evident CPCB seal before dispatch to the incinerator.
             </p>
 
@@ -211,7 +211,7 @@ export const BiomedicalVault3D: React.FC<BiomedicalVault3DProps> = ({ manifests 
               type="button"
               disabled={isDepressurizing}
               onClick={handleCycleAirlock}
-              className="w-full py-2.5 rounded-xl bg-amber-700 hover:bg-amber-800 disabled:opacity-50 text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all btn-3d"
+              className="w-full py-2.5 rounded-xl bg-amber-600 hover:bg-amber-500 disabled:opacity-50 text-white font-bold text-xs shadow-md flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
               {isDepressurizing ? (
                 <>

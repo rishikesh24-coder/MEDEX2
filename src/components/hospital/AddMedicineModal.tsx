@@ -93,32 +93,83 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
       maxWidth="3xl"
     >
       <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Quick Sample Prefill Buttons */}
+        <div className="flex flex-wrap items-center justify-between gap-2 p-2.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs">
+          <span className="font-semibold text-slate-300">Evaluation Presets:</span>
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                setBrandName('Meronex 1000 IV');
+                setGenericComposition('Meropenem Trihydrate IP 1000mg');
+                setDosageForm('Vial / Injection');
+                setStrength('1g IV Vial');
+                setStorageCondition('Ambient (15-25°C)');
+                setBatchNumber('BT-2024-998');
+                setManufacturingDate('2024-04-15');
+                setExpiryDate('2027-05-30');
+                setTotalUnits(250);
+                setMrpPerUnit(2450);
+                setConcessionPercentage(35);
+                setBillNumber('INV-PFIZER-2024-912');
+                setBillFileName('PFIZER-ORIGINAL-TAX-INVOICE.pdf');
+                setCategory('Critical Care / Antibiotic');
+              }}
+              className="px-2.5 py-1 rounded-md bg-teal-950/60 hover:bg-teal-900/80 text-teal-300 border border-teal-700/60 text-[11px] font-bold cursor-pointer transition-colors"
+            >
+              + Sample Surplus Batch (Meronex 1000 IV)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setBrandName('Insugen-N 100IU');
+                setGenericComposition('Isophane Insulin IP');
+                setDosageForm('Cartridge / Pen');
+                setStrength('100 IU/mL 3mL');
+                setStorageCondition('Cold-Chain (2-8°C)');
+                setBatchNumber('BT-EXP-3819');
+                setManufacturingDate('2024-02-10');
+                setExpiryDate('2026-09-18'); // within 13 days of simulated 2026-09-05
+                setTotalUnits(120);
+                setMrpPerUnit(420);
+                setConcessionPercentage(50);
+                setBillNumber('INV-BIOCON-2024-554');
+                setBillFileName('BIOCON-PURCHASE-INVOICE.pdf');
+                setCategory('Endocrinology');
+              }}
+              className="px-2.5 py-1 rounded-md bg-rose-950/60 hover:bg-rose-900/80 text-rose-300 border border-rose-700/60 text-[11px] font-bold cursor-pointer transition-colors"
+            >
+              + Sample Near-Expiry Lockout (&lt; 30 Days)
+            </button>
+          </div>
+        </div>
+
         {/* Regulatory Expiry Alert Ticker */}
         {isNearExpiry ? (
-          <div className="p-4 rounded-lg bg-rose-50 border border-rose-200 text-rose-950 flex items-start gap-3 animate-in fade-in">
-            <Flame className="w-6 h-6 text-rose-600 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-lg bg-rose-950/40 border border-rose-800/60 text-rose-200 flex items-start gap-3 animate-in fade-in">
+            <Flame className="w-6 h-6 text-rose-400 shrink-0 mt-0.5" />
             <div className="text-xs space-y-1">
-              <div className="font-bold uppercase tracking-wider text-rose-800 flex items-center gap-2">
+              <div className="font-bold uppercase tracking-wider text-rose-300 flex items-center gap-2">
                 <span>⚠️ REGULATORY LOCKOUT ACTIVE (Expiry &lt; 30 Days)</span>
-                <span className="px-1.5 py-0.5 bg-rose-200 text-rose-900 rounded font-mono text-[10px]">
+                <span className="px-1.5 py-0.5 bg-rose-900/80 text-rose-200 border border-rose-700/60 rounded font-mono text-[10px]">
                   {daysUntilExpiry} days remaining
                 </span>
               </div>
-              <p className="text-rose-900/90 leading-relaxed">
+              <p className="text-rose-200/90 leading-relaxed">
                 Under CDSCO Rule 65 & Biomedical Waste Management Rules 2016, pharmaceuticals with less than 30 days of shelf life are prohibited from inter-hospital commercial redistribution. 
               </p>
-              <p className="font-medium text-rose-800">
+              <p className="font-medium text-rose-300">
                 Action converted: This batch will be securely routed to an authorized central incineration facility (1200°C) with CPCB chain-of-custody tracking.
               </p>
             </div>
           </div>
         ) : (
-          <div className="p-3 rounded-lg bg-teal-50/80 border border-teal-200 text-teal-950 flex items-center justify-between text-xs">
+          <div className="p-3 rounded-lg bg-teal-950/40 border border-teal-800/60 text-teal-200 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-teal-700" />
-              <span>Shelf Life Compliant: <strong>{daysUntilExpiry} days</strong> until expiry. Eligible for hospital network trading.</span>
+              <ShieldCheck className="w-4 h-4 text-teal-400" />
+              <span>Shelf Life Compliant: <strong className="text-teal-300">{daysUntilExpiry} days</strong> until expiry. Eligible for hospital network trading.</span>
             </div>
-            <span className="font-mono text-[11px] bg-teal-200/80 text-teal-900 px-2 py-0.5 rounded font-semibold">
+            <span className="font-mono text-[11px] bg-teal-900/80 text-teal-200 border border-teal-700/60 px-2 py-0.5 rounded font-semibold">
               EXCHANGE READY
             </span>
           </div>
@@ -126,13 +177,13 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
 
         {/* Section 1: Pharmaceutical Specifications */}
         <div>
-          <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-            <Layers className="w-3.5 h-3.5 text-teal-700" />
+          <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+            <Layers className="w-3.5 h-3.5 text-teal-400" />
             1. Pharmaceutical Formulation & Specifications
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Brand / Trade Name *
               </label>
               <input
@@ -140,13 +191,13 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                 required
                 value={brandName}
                 onChange={(e) => setBrandName(e.target.value)}
-                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100 placeholder-slate-500"
                 placeholder="e.g. Meronex 1000 IV"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Generic Scientific Composition *
               </label>
               <input
@@ -154,19 +205,19 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                 required
                 value={genericComposition}
                 onChange={(e) => setGenericComposition(e.target.value)}
-                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100 placeholder-slate-500"
                 placeholder="e.g. Meropenem Trihydrate IP 1000mg"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Dosage Form *
               </label>
               <select
                 value={dosageForm}
                 onChange={(e) => setDosageForm(e.target.value as DosageForm)}
-                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100"
               >
                 <option value="Vial / Injection">Vial / Injection</option>
                 <option value="Cartridge / Pen">Cartridge / Pen</option>
@@ -177,7 +228,7 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Strength & Power *
               </label>
               <input
@@ -185,39 +236,39 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                 required
                 value={strength}
                 onChange={(e) => setStrength(e.target.value)}
-                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100 placeholder-slate-500"
                 placeholder="e.g. 1g IV Vial or 100 IU/mL"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Storage & Cold Chain Protocol *
               </label>
               <div className="relative">
                 <select
                   value={storageCondition}
                   onChange={(e) => setStorageCondition(e.target.value as StorageCondition)}
-                  className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                  className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100"
                 >
                   <option value="Ambient (15-25°C)">Ambient (15-25°C)</option>
                   <option value="Cold-Chain (2-8°C)">Cold-Chain (2-8°C) — IoT Logger Required</option>
                   <option value="Ultra-Cryo (-20°C)">Ultra-Cryo (-20°C) — Biologics Carrier</option>
                 </select>
                 {storageCondition.includes('Cold') && (
-                  <ThermometerSnowflake className="w-4 h-4 text-cyan-600 absolute right-3 top-2.5 pointer-events-none" />
+                  <ThermometerSnowflake className="w-4 h-4 text-cyan-400 absolute right-3 top-2.5 pointer-events-none" />
                 )}
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Therapeutic Formulary Category *
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value as MedicineItem['category'])}
-                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100"
               >
                 <option value="Critical Care / Antibiotic">Critical Care / Antibiotic</option>
                 <option value="Endocrinology">Endocrinology</option>
@@ -230,14 +281,14 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
         </div>
 
         {/* Section 2: Batch Ledger & Expiry Verification */}
-        <div className="border-t border-slate-200 pt-4">
-          <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-            <Calendar className="w-3.5 h-3.5 text-teal-700" />
+        <div className="border-t border-slate-800 pt-4">
+          <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+            <Calendar className="w-3.5 h-3.5 text-teal-400" />
             2. Batch Ledger & Quality Audit
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Manufacturer Batch Number *
               </label>
               <input
@@ -245,13 +296,13 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                 required
                 value={batchNumber}
                 onChange={(e) => setBatchNumber(e.target.value.toUpperCase())}
-                className="w-full text-xs font-mono font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs uppercase"
+                className="w-full text-xs font-mono font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100 uppercase"
                 placeholder="BT-2024-889"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Manufacturing Date *
               </label>
               <input
@@ -259,12 +310,12 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                 required
                 value={manufacturingDate}
                 onChange={(e) => setManufacturingDate(e.target.value)}
-                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                className="w-full text-xs font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Expiry Date *
               </label>
               <input
@@ -272,13 +323,13 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                 required
                 value={expiryDate}
                 onChange={(e) => setExpiryDate(e.target.value)}
-                className={`w-full text-xs font-medium px-3 py-2 rounded-lg border focus:outline-hidden focus:ring-2 focus:border-transparent bg-white shadow-xs ${
+                className={`w-full text-xs font-medium px-3 py-2 rounded-lg border focus:outline-hidden focus:ring-2 bg-slate-950 text-slate-100 ${
                   isNearExpiry
-                    ? 'border-rose-400 text-rose-700 focus:ring-rose-500'
-                    : 'border-slate-300 focus:ring-teal-600'
+                    ? 'border-rose-500 text-rose-300 focus:ring-rose-500'
+                    : 'border-slate-700 focus:ring-teal-500'
                 }`}
               />
-              <span className={`text-[10px] mt-1 block font-mono ${isNearExpiry ? 'text-rose-600 font-semibold' : 'text-slate-500'}`}>
+              <span className={`text-[10px] mt-1 block font-mono ${isNearExpiry ? 'text-rose-400 font-semibold' : 'text-slate-400'}`}>
                 {daysUntilExpiry > 0 ? `${daysUntilExpiry} days to expiry` : 'Already expired'}
               </span>
             </div>
@@ -287,15 +338,15 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
 
         {/* Section 3: Dynamic Concession & Price Calculator */}
         {!isNearExpiry && (
-          <div className="border-t border-slate-200 pt-4">
-            <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-              <Calculator className="w-3.5 h-3.5 text-teal-700" />
+          <div className="border-t border-slate-800 pt-4">
+            <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+              <Calculator className="w-3.5 h-3.5 text-teal-400" />
               3. Dynamic Concession & Transfer Price Calculator
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
                   Available Units for Transfer *
                 </label>
                 <input
@@ -304,12 +355,12 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                   required
                   value={totalUnits}
                   onChange={(e) => setTotalUnits(Math.max(1, Number(e.target.value)))}
-                  className="w-full text-xs font-mono font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                  className="w-full text-xs font-mono font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
                   Original Purchase MRP (₹/unit) *
                 </label>
                 <input
@@ -318,12 +369,12 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                   required
                   value={mrpPerUnit}
                   onChange={(e) => setMrpPerUnit(Math.max(1, Number(e.target.value)))}
-                  className="w-full text-xs font-mono font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                  className="w-full text-xs font-mono font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <label className="block text-xs font-semibold text-slate-300 mb-1">
                   Concession Offered (%) *
                 </label>
                 <div className="flex items-center gap-2">
@@ -334,9 +385,9 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                     step="5"
                     value={concessionPercentage}
                     onChange={(e) => setConcessionPercentage(Number(e.target.value))}
-                    className="flex-1 accent-teal-700"
+                    className="flex-1 accent-teal-500"
                   />
-                  <span className="font-mono text-xs font-bold text-teal-800 w-12 text-right">
+                  <span className="font-mono text-xs font-bold text-teal-300 w-12 text-right">
                     {concessionPercentage}%
                   </span>
                 </div>
@@ -346,10 +397,10 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                       key={pct}
                       type="button"
                       onClick={() => setConcessionPercentage(pct)}
-                      className={`text-[10px] px-2 py-0.5 rounded font-mono border ${
+                      className={`text-[10px] px-2 py-0.5 rounded font-mono border cursor-pointer transition-colors ${
                         concessionPercentage === pct
-                          ? 'bg-teal-700 text-white border-teal-700 font-bold'
-                          : 'bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200'
+                          ? 'bg-teal-600 text-white border-teal-500 font-bold'
+                          : 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700'
                       }`}
                     >
                       {pct}%
@@ -360,7 +411,7 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
             </div>
 
             {/* Real-Time Mathematical Pricing Ledger Card */}
-            <div className="p-4 rounded-lg bg-slate-900 text-white font-mono text-xs space-y-2.5">
+            <div className="p-4 rounded-lg bg-slate-950 border border-slate-800 text-white font-mono text-xs space-y-2.5">
               <div className="flex justify-between items-center text-slate-400 text-[11px] pb-2 border-b border-slate-800">
                 <span>FORMULA: TRANSFER_PRICE = MRP × (1 - CONCESSION%)</span>
                 <span className="text-teal-400 font-semibold">DYNAMIC ENGINE</span>
@@ -393,14 +444,14 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
         )}
 
         {/* Section 4: Original Bill & Compliance Verification */}
-        <div className="border-t border-slate-200 pt-4">
-          <div className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-2">
-            <FileCheck className="w-3.5 h-3.5 text-teal-700" />
+        <div className="border-t border-slate-800 pt-4">
+          <div className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2">
+            <FileCheck className="w-3.5 h-3.5 text-teal-400" />
             4. Original Purchase Bill & Batch Test Certificate
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Original Purchase Invoice / Bill No. *
               </label>
               <input
@@ -408,17 +459,17 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
                 required
                 value={billNumber}
                 onChange={(e) => setBillNumber(e.target.value)}
-                className="w-full text-xs font-mono font-medium px-3 py-2 rounded-lg border border-slate-300 focus:outline-hidden focus:ring-2 focus:ring-teal-600 focus:border-transparent bg-white shadow-xs"
+                className="w-full text-xs font-mono font-medium px-3 py-2 rounded-lg border border-slate-700 focus:outline-hidden focus:ring-2 focus:ring-teal-500 bg-slate-950 text-slate-100 uppercase"
                 placeholder="INV-PUR-2024-9102"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1">
+              <label className="block text-xs font-semibold text-slate-300 mb-1">
                 Upload Bill & Quality Release Slip (PDF) *
               </label>
               <div className="flex items-center gap-2">
-                <label className="flex-1 cursor-pointer flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-slate-300 hover:border-teal-600 bg-slate-50 hover:bg-teal-50/50 transition-colors text-xs text-slate-600">
+                <label className="flex-1 cursor-pointer flex items-center gap-2 px-3 py-2 rounded-lg border border-dashed border-slate-700 hover:border-teal-500 bg-slate-950/60 hover:bg-slate-900 transition-colors text-xs text-slate-300">
                   <Upload className="w-4 h-4 text-slate-400" />
                   <span className="truncate">{billFileName}</span>
                   <input
@@ -438,30 +489,30 @@ export const AddMedicineModal: React.FC<AddMedicineModalProps> = ({ isOpen, onCl
         </div>
 
         {/* Submission Buttons */}
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 text-xs font-semibold text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg transition-colors"
+            className="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-lg transition-colors cursor-pointer"
           >
-            Cancel
+            Cancel & Close Form
           </button>
 
           {isNearExpiry ? (
             <button
               type="submit"
-              className="px-5 py-2.5 text-xs font-bold rounded-lg bg-rose-700 hover:bg-rose-800 text-white shadow-md border border-rose-800 flex items-center gap-2 transition-all"
+              className="px-5 py-2.5 text-xs font-bold rounded-lg bg-rose-600 hover:bg-rose-500 text-white shadow-lg border border-rose-500/50 flex items-center gap-2 transition-all cursor-pointer"
             >
               <Flame className="w-4 h-4" />
-              Route to Safe Biomedical Disposal Stream
+              Route to CPCB Hazardous Biomedical Disposal Stream
             </button>
           ) : (
             <button
               type="submit"
-              className="px-5 py-2.5 text-xs font-bold rounded-lg bg-teal-700 hover:bg-teal-800 text-white shadow-md border border-teal-800 flex items-center gap-2 transition-all"
+              className="px-5 py-2.5 text-xs font-bold rounded-lg bg-teal-600 hover:bg-teal-500 text-white shadow-lg border border-teal-500/50 flex items-center gap-2 transition-all cursor-pointer"
             >
               <ShieldCheck className="w-4 h-4" />
-              Publish to Verified Hospital Network
+              Publish Surplus Batch to Verified Hospital Network
             </button>
           )}
         </div>

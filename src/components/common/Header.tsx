@@ -34,7 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
   // 1. Ultra-Minimal Landing Page Header
   if (activePath === '/') {
     return (
-      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-200/80">
+      <header className="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Left: Clean MedEx logo + subtle badge "Clinical Network" */}
@@ -42,12 +42,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
               onClick={() => navigate('/')}
               className="flex items-center gap-3 text-left focus:outline-hidden group"
             >
-              <div className="w-9 h-9 rounded-xl bg-teal-800 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
-                <ArrowRightLeft className="w-4.5 h-4.5 text-teal-200" />
+              <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+                <ArrowRightLeft className="w-4.5 h-4.5 text-white" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold tracking-tight text-slate-900 font-display">MedEx</span>
-                <span className="text-[11px] font-medium tracking-wide px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200/60">
+                <span className="text-xl font-bold tracking-tight text-white font-display">MedEx</span>
+                <span className="text-[11px] font-medium tracking-wide px-2.5 py-0.5 rounded-full bg-teal-950/80 text-teal-300 border border-teal-800/80">
                   Clinical Network
                 </span>
               </div>
@@ -55,24 +55,24 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
 
             {/* Right: Clean links, outline Sign In, solid emerald Register Hospital */}
             <div className="flex items-center gap-3 sm:gap-6">
-              <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-600">
-                <a href="#about" className="hover:text-slate-900 transition-colors">About</a>
-                <a href="#how-it-works" className="hover:text-slate-900 transition-colors">How It Works</a>
-                <a href="#compliance" className="hover:text-slate-900 transition-colors">Compliance</a>
+              <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-300">
+                <a href="#about" className="hover:text-teal-300 transition-colors">About</a>
+                <a href="#how-it-works" className="hover:text-teal-300 transition-colors">How It Works</a>
+                <a href="#compliance" className="hover:text-teal-300 transition-colors">Compliance</a>
               </nav>
 
               <div className="flex items-center gap-2.5">
                 <button
                   onClick={() => navigate('/auth/signin')}
-                  className="px-3.5 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-100 rounded-lg border border-slate-200 transition-colors"
+                  className="px-3.5 py-1.5 text-xs font-medium text-slate-200 hover:text-white hover:bg-slate-800 rounded-lg border border-slate-700 bg-slate-900/60 transition-colors"
                 >
-                  Sign In
+                  Sign In to Portal
                 </button>
                 <button
                   onClick={() => navigate('/auth/register-hospital')}
-                  className="px-4 py-1.5 text-xs font-semibold text-white bg-teal-700 hover:bg-teal-800 rounded-lg shadow-xs transition-colors"
+                  className="px-4 py-1.5 text-xs font-semibold text-white bg-teal-600 hover:bg-teal-500 rounded-lg shadow-xs transition-colors"
                 >
-                  Register Hospital
+                  Register Hospital Node
                 </button>
               </div>
             </div>
@@ -85,19 +85,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
   // 2. Clean Auth Pages Header
   if (activePath.startsWith('/auth/')) {
     return (
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80">
+      <header className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <button
               onClick={() => navigate('/')}
               className="flex items-center gap-3 text-left focus:outline-hidden"
             >
-              <div className="w-9 h-9 rounded-xl bg-teal-800 flex items-center justify-center text-white shadow-xs">
-                <ArrowRightLeft className="w-4.5 h-4.5 text-teal-200" />
+              <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-xs">
+                <ArrowRightLeft className="w-4.5 h-4.5 text-white" />
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xl font-bold tracking-tight text-slate-900 font-display">MedEx</span>
-                <span className="text-[11px] font-medium tracking-wide px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200/60">
+                <span className="text-xl font-bold tracking-tight text-white font-display">MedEx</span>
+                <span className="text-[11px] font-medium tracking-wide px-2.5 py-0.5 rounded-full bg-teal-950/80 text-teal-300 border border-teal-800/80">
                   Clinical Network
                 </span>
               </div>
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
 
             <button
               onClick={() => navigate('/')}
-              className="text-xs font-medium text-slate-600 hover:text-slate-900"
+              className="text-xs font-medium text-slate-400 hover:text-slate-100 transition-colors"
             >
               ← Back to Overview
             </button>
@@ -117,7 +117,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
 
   // 3. In-App Clinical Navigation (Hospital Workspace & Admin Command)
   return (
-    <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200">
+    <header className="sticky top-0 z-40 bg-slate-950/95 backdrop-blur-md border-b border-slate-800">
       {/* Main Navigation Row */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
@@ -127,13 +127,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
               onClick={() => navigate(role === 'hospital' ? '/hospital/dashboard' : '/admin/dashboard')}
               className="flex items-center gap-3 text-left group focus:outline-hidden"
             >
-              <div className="w-9 h-9 rounded-xl bg-teal-800 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
-                <ArrowRightLeft className="w-4.5 h-4.5 text-teal-200" />
+              <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center text-white shadow-xs group-hover:scale-105 transition-transform">
+                <ArrowRightLeft className="w-4.5 h-4.5 text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-bold tracking-tight text-slate-900 font-display">MedEx</span>
-                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 border border-teal-200">
+                  <span className="text-xl font-bold tracking-tight text-white font-display">MedEx</span>
+                  <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-950 text-teal-300 border border-teal-800">
                     {role === 'hospital' ? 'Hospital Node' : 'CDSCO Command'}
                   </span>
                 </div>
@@ -142,11 +142,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
 
             {/* Current Active Hospital Indicator (if in Hospital view) */}
             {role === 'hospital' && (
-              <div className="hidden sm:flex items-center gap-2 ml-4 pl-4 border-l border-slate-200">
-                <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <div className="hidden sm:flex items-center gap-2 ml-4 pl-4 border-l border-slate-800">
+                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <div className="text-xs flex items-center gap-2">
-                  <span className="font-semibold text-slate-800">{currentHospital.name}</span>
-                  <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-medium">
+                  <span className="font-semibold text-slate-200">{currentHospital.name}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-emerald-950/80 text-emerald-300 border border-emerald-800 text-[10px] font-medium">
                     NABH Accredited
                   </span>
                 </div>
@@ -155,11 +155,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
 
             {/* Current Admin Indicator (if in Admin view) */}
             {role === 'admin' && (
-              <div className="hidden sm:flex items-center gap-2 ml-4 pl-4 border-l border-slate-200">
-                <div className="w-2 h-2 rounded-full bg-rose-500" />
+              <div className="hidden sm:flex items-center gap-2 ml-4 pl-4 border-l border-slate-800">
+                <div className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
                 <div className="text-xs">
-                  <span className="font-semibold text-rose-950">Central Drug Regulatory Directorate</span>
-                  <span className="text-rose-600 ml-1 font-mono text-[10px]">[Master Oversight]</span>
+                  <span className="font-semibold text-rose-200">Central Drug Regulatory Directorate</span>
+                  <span className="text-rose-400 ml-1 font-mono text-[10px]">[Master Oversight]</span>
                 </div>
               </div>
             )}
@@ -171,19 +171,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
               <>
                 <button
                   onClick={onOpenAddMedicine}
-                  className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs font-semibold rounded-lg bg-teal-700 text-white hover:bg-teal-800 shadow-xs transition-all"
+                  className="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold rounded-lg bg-teal-600 text-white hover:bg-teal-500 shadow-xs transition-all cursor-pointer btn-3d"
                 >
                   <Plus className="w-4 h-4" />
-                  List Surplus Medicine
+                  <span>List Surplus Medicine</span>
                 </button>
                 <button
                   onClick={() => navigate('/hospital/incoming-requests')}
-                  className="relative p-2 text-slate-600 hover:text-teal-700 rounded-lg hover:bg-slate-100 transition-colors"
+                  className="relative p-2 text-slate-300 hover:text-teal-300 rounded-lg hover:bg-slate-800/80 transition-colors"
                   title="Incoming Requisitions"
                 >
                   <ArrowRightLeft className="w-5 h-5" />
                   {pendingInbound > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-amber-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white animate-bounce">
+                    <span className="absolute -top-1 -right-1 bg-amber-500 text-slate-950 text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-slate-950 animate-bounce">
                       {pendingInbound}
                     </span>
                   )}
@@ -193,13 +193,13 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
 
             {role === 'admin' && (
               <div className="flex items-center gap-2">
-                <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-medium rounded-md bg-rose-50 text-rose-800 border border-rose-200">
-                  <Lock className="w-3.5 h-3.5 text-rose-600" /> CDSCO SECURE SESSION
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-medium rounded-md bg-rose-950/70 text-rose-300 border border-rose-800">
+                  <Lock className="w-3.5 h-3.5 text-rose-400" /> CDSCO SECURE SESSION
                 </span>
                 {pendingAdminTickets > 0 && (
                   <button
                     onClick={() => navigate('/admin/feedback-console')}
-                    className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-md bg-amber-100 text-amber-900 border border-amber-300"
+                    className="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-md bg-amber-950/70 text-amber-300 border border-amber-800"
                   >
                     <span>{pendingAdminTickets} Open Disputes</span>
                   </button>
@@ -213,7 +213,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
                 setRole('public');
                 navigate('/');
               }}
-              className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+              className="p-2 text-slate-400 hover:text-slate-100 hover:bg-slate-800/80 rounded-lg transition-colors"
               title="Return to Public Overview"
             >
               <LogOut className="w-4 h-4" />
@@ -223,7 +223,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
       </div>
 
       {/* Secondary Clinical Navigation Bar (4 Grouped Sections for Hospital) */}
-      <div className="bg-slate-100/90 border-t border-slate-200 px-4 sm:px-6 lg:px-8 overflow-x-auto">
+      <div className="bg-slate-900/90 border-t border-b border-slate-800/80 px-4 sm:px-6 lg:px-8 overflow-x-auto">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-2 py-1.5 min-w-max">
           {role === 'hospital' && (
             <>
@@ -233,14 +233,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
                   active={activePath === '/hospital/dashboard'}
                   onClick={() => navigate('/hospital/dashboard')}
                   icon={<Activity className="w-3.5 h-3.5" />}
-                  label="Overview"
+                  label="Dashboard Overview"
                 />
 
                 <SectionButton
                   active={['/hospital/marketplace', '/hospital/my-requests', '/hospital/incoming-requests'].includes(activePath)}
                   onClick={() => navigate('/hospital/marketplace')}
                   icon={<Search className="w-3.5 h-3.5" />}
-                  label="Marketplace & Requests"
+                  label="Medicine Marketplace & Orders"
                   badge={pendingInbound > 0 ? String(pendingInbound) : undefined}
                 />
 
@@ -248,14 +248,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
                   active={['/hospital/inventory', '/hospital/waste-management'].includes(activePath)}
                   onClick={() => navigate('/hospital/inventory')}
                   icon={<Boxes className="w-3.5 h-3.5" />}
-                  label="Inventory & Waste"
+                  label="Pharmacy Inventory & Waste"
                 />
 
                 <SectionButton
                   active={['/hospital/tracking', '/hospital/invoices', '/hospital/history', '/hospital/feedback'].includes(activePath)}
                   onClick={() => navigate('/hospital/tracking')}
                   icon={<Truck className="w-3.5 h-3.5" />}
-                  label="Logistics & Records"
+                  label="Logistics & Audit Records"
                 />
               </div>
 
@@ -266,18 +266,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
                     <SubTabButton
                       active={activePath === '/hospital/marketplace'}
                       onClick={() => navigate('/hospital/marketplace')}
-                      label="Peer Market"
+                      label="Browse Peer Stock"
                     />
                     <SubTabButton
                       active={activePath === '/hospital/incoming-requests'}
                       onClick={() => navigate('/hospital/incoming-requests')}
-                      label="Inbound"
+                      label="Inbound Requisitions (Sales)"
                       badge={pendingInbound > 0 ? String(pendingInbound) : undefined}
                     />
                     <SubTabButton
                       active={activePath === '/hospital/my-requests'}
                       onClick={() => navigate('/hospital/my-requests')}
-                      label="Outbound"
+                      label="My Outbound Requests (Purchases)"
                     />
                   </>
                 )}
@@ -287,12 +287,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
                     <SubTabButton
                       active={activePath === '/hospital/inventory'}
                       onClick={() => navigate('/hospital/inventory')}
-                      label="Smart Stock"
+                      label="Smart Inventory Ledger"
                     />
                     <SubTabButton
                       active={activePath === '/hospital/waste-management'}
                       onClick={() => navigate('/hospital/waste-management')}
-                      label="Bio-Waste Vault"
+                      label="Biomedical Waste Vault"
                     />
                   </>
                 )}
@@ -302,22 +302,22 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
                     <SubTabButton
                       active={activePath === '/hospital/tracking'}
                       onClick={() => navigate('/hospital/tracking')}
-                      label="Live Tracking"
+                      label="Cold-Chain GPS Tracking"
                     />
                     <SubTabButton
                       active={activePath === '/hospital/invoices'}
                       onClick={() => navigate('/hospital/invoices')}
-                      label="Invoices"
+                      label="GST Tax Invoices"
                     />
                     <SubTabButton
                       active={activePath === '/hospital/history'}
                       onClick={() => navigate('/hospital/history')}
-                      label="History"
+                      label="Transaction History"
                     />
                     <SubTabButton
                       active={activePath === '/hospital/feedback'}
                       onClick={() => navigate('/hospital/feedback')}
-                      label="Disputes"
+                      label="Support & Dispute Desk"
                     />
                   </>
                 )}
@@ -337,37 +337,37 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAddMedicine }) => {
                 active={activePath === '/admin/dashboard'}
                 onClick={() => navigate('/admin/dashboard')}
                 icon={<Activity className="w-3.5 h-3.5 text-rose-600" />}
-                label="Admin Dashboard & Radar"
+                label="Executive Command & Demand Radar"
               />
               <NavButton
                 active={activePath === '/admin/registry'}
                 onClick={() => navigate('/admin/registry')}
                 icon={<Boxes className="w-3.5 h-3.5" />}
-                label="Global Medicine Registry"
+                label="National Medicine Registry"
               />
               <NavButton
                 active={activePath === '/admin/compliance'}
                 onClick={() => navigate('/admin/compliance')}
                 icon={<ShieldCheck className="w-3.5 h-3.5" />}
-                label="Compliance & Dossier"
+                label="Hospital Compliance Dossier"
               />
               <NavButton
                 active={activePath === '/admin/verification-queue'}
                 onClick={() => navigate('/admin/verification-queue')}
                 icon={<CheckCircle2 className="w-3.5 h-3.5" />}
-                label="Verification Queue"
+                label="Hospital Verification Queue"
               />
               <NavButton
                 active={activePath === '/admin/logistics'}
                 onClick={() => navigate('/admin/logistics')}
                 icon={<Flame className="w-3.5 h-3.5 text-amber-600" />}
-                label="Logistics & Biomedical Waste"
+                label="Disposal & Logistics Oversight"
               />
               <NavButton
                 active={activePath === '/admin/feedback-console'}
                 onClick={() => navigate('/admin/feedback-console')}
                 icon={<MessageSquare className="w-3.5 h-3.5" />}
-                label="Central Feedback Console"
+                label="Grievance & Dispute Console"
                 badge={pendingAdminTickets > 0 ? String(pendingAdminTickets) : undefined}
               />
             </>
@@ -389,16 +389,16 @@ interface NavButtonProps {
 const NavButton: React.FC<NavButtonProps> = ({ active, onClick, icon, label, badge }) => (
   <button
     onClick={onClick}
-    className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md font-medium transition-all ${
+    className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg font-medium transition-all cursor-pointer ${
       active
-        ? 'bg-white text-slate-900 shadow-xs border border-slate-300 font-semibold'
-        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+        ? 'bg-slate-800 text-rose-200 shadow-xs border border-rose-500/40 font-semibold'
+        : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800/60'
     }`}
   >
     {icon}
     <span>{label}</span>
     {badge && (
-      <span className="ml-1 px-1.5 py-0.2 bg-amber-500 text-white text-[10px] font-bold rounded-full">
+      <span className="ml-1 px-1.5 py-0.2 bg-amber-500 text-slate-950 text-[10px] font-bold rounded-full">
         {badge}
       </span>
     )}
@@ -416,16 +416,16 @@ interface SectionButtonProps {
 const SectionButton: React.FC<SectionButtonProps> = ({ active, onClick, icon, label, badge }) => (
   <button
     onClick={onClick}
-    className={`inline-flex items-center gap-2 px-3.5 py-2 text-sm rounded-lg font-semibold transition-all ${
+    className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs sm:text-sm rounded-lg font-semibold transition-all cursor-pointer ${
       active
-        ? 'bg-white text-teal-900 shadow-sm border border-teal-600/30 ring-1 ring-teal-500/20'
-        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/70'
+        ? 'bg-slate-800 text-teal-300 shadow-sm border border-teal-500/40 ring-1 ring-teal-500/20'
+        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
     }`}
   >
-    <span className={active ? 'text-teal-700' : 'text-slate-500'}>{icon}</span>
+    <span className={active ? 'text-teal-400' : 'text-slate-500'}>{icon}</span>
     <span>{label}</span>
     {badge && (
-      <span className="ml-0.5 px-1.5 py-0.5 bg-amber-500 text-white text-[10px] font-bold rounded-full animate-pulse">
+      <span className="ml-0.5 px-1.5 py-0.5 bg-amber-500 text-slate-950 text-[10px] font-bold rounded-full animate-pulse">
         {badge}
       </span>
     )}
@@ -442,15 +442,15 @@ interface SubTabButtonProps {
 const SubTabButton: React.FC<SubTabButtonProps> = ({ active, onClick, label, badge }) => (
   <button
     onClick={onClick}
-    className={`px-3 py-1.5 text-xs rounded-md font-semibold transition-all ${
+    className={`px-3 py-1.5 text-xs rounded-md font-semibold transition-all cursor-pointer ${
       active
-        ? 'bg-teal-700 text-white shadow-sm'
-        : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
+        ? 'bg-teal-600 text-white shadow-xs'
+        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/70'
     }`}
   >
     <span>{label}</span>
     {badge && (
-      <span className="ml-1.5 px-1.5 py-0.5 bg-amber-400 text-slate-900 text-[10px] font-bold rounded-full">
+      <span className="ml-1.5 px-1.5 py-0.5 bg-amber-400 text-slate-950 text-[10px] font-bold rounded-full">
         {badge}
       </span>
     )}

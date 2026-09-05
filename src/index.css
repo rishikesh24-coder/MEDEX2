@@ -5,31 +5,32 @@
     --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
     --font-display: 'Space Grotesk', 'Inter', sans-serif;
+    color-scheme: dark;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #F8FAFC;
-    color: #0F172A;
+    background-color: #090D16;
+    color: #F1F5F9;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
 
-  /* Custom clinical scrollbars */
+  /* Custom clinical dark scrollbars */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #F1F5F9;
+    background: #0B0F19;
   }
   ::-webkit-scrollbar-thumb {
-    background: #CBD5E1;
+    background: #1E293B;
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #94A3B8;
+    background: #334155;
   }
 }
 
@@ -58,38 +59,38 @@
   backface-visibility: hidden;
 }
 
-/* Spatial Multi-Source Contact Shadows */
+/* Dark Mode Spatial Multi-Source Contact Shadows */
 .shadow-spatial {
   box-shadow: 
-    0 20px 40px -15px rgba(15, 118, 110, 0.12),
-    0 0 20px rgba(0, 0, 0, 0.03),
-    0 1px 3px rgba(0, 0, 0, 0.05);
+    0 20px 40px -15px rgba(0, 0, 0, 0.7),
+    0 0 25px rgba(20, 184, 166, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .shadow-spatial-hover {
   box-shadow: 
-    0 25px 50px -12px rgba(15, 118, 110, 0.22),
-    0 0 25px rgba(16, 185, 129, 0.08),
-    0 2px 6px rgba(0, 0, 0, 0.06);
+    0 25px 50px -12px rgba(0, 0, 0, 0.85),
+    0 0 35px rgba(45, 212, 191, 0.15),
+    0 2px 6px rgba(0, 0, 0, 0.9);
 }
 
 .shadow-spatial-amber {
   box-shadow: 
-    0 20px 40px -15px rgba(217, 119, 6, 0.18),
-    0 0 20px rgba(245, 158, 11, 0.06),
-    0 1px 3px rgba(0, 0, 0, 0.05);
+    0 20px 40px -15px rgba(0, 0, 0, 0.7),
+    0 0 25px rgba(245, 158, 11, 0.12),
+    0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .shadow-spatial-rose {
   box-shadow: 
-    0 20px 40px -15px rgba(225, 29, 72, 0.18),
-    0 0 20px rgba(244, 63, 94, 0.06),
-    0 1px 3px rgba(0, 0, 0, 0.05);
+    0 20px 40px -15px rgba(0, 0, 0, 0.7),
+    0 0 25px rgba(244, 63, 94, 0.15),
+    0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
-/* Iridescent 1px border gradient effect */
+/* Iridescent 1px border gradient effect in Dark Mode */
 .border-iridescent {
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(51, 65, 85, 0.7);
   position: relative;
 }
 .border-iridescent::before {
@@ -98,7 +99,7 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(20, 184, 166, 0.2), rgba(244, 63, 94, 0.15), rgba(255, 255, 255, 0.4));
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(20, 184, 166, 0.4), rgba(244, 63, 94, 0.25), rgba(255, 255, 255, 0.1));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -120,7 +121,7 @@
   background: linear-gradient(
     60deg,
     transparent 35%,
-    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.12) 50%,
     transparent 65%
   );
   transform: translateX(-100%);
@@ -160,12 +161,12 @@
   animation: float-slow 20s ease-in-out 4s infinite reverse;
 }
 
-/* Subtle clinical grid backdrop - ultra-faint felt-not-seen */
+/* Dark clinical grid backdrop */
 .bg-clinical-grid {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, rgba(226, 232, 240, 0.18) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(226, 232, 240, 0.18) 1px, transparent 1px);
+    linear-gradient(to right, rgba(30, 41, 59, 0.35) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(30, 41, 59, 0.35) 1px, transparent 1px);
 }
 
 /* Laser Route Pulse */
@@ -189,7 +190,7 @@
     box-shadow: 0 0 10px rgba(16, 185, 129, 0.25), 0 0 20px rgba(16, 185, 129, 0.1);
   }
   50% {
-    box-shadow: 0 0 22px rgba(16, 185, 129, 0.5), 0 0 35px rgba(16, 185, 129, 0.25);
+    box-shadow: 0 0 25px rgba(45, 212, 191, 0.4), 0 0 40px rgba(20, 184, 166, 0.2);
   }
 }
 
@@ -202,7 +203,7 @@
     box-shadow: 0 0 10px rgba(245, 158, 11, 0.25), 0 0 20px rgba(245, 158, 11, 0.1);
   }
   50% {
-    box-shadow: 0 0 22px rgba(245, 158, 11, 0.5), 0 0 35px rgba(245, 158, 11, 0.25);
+    box-shadow: 0 0 25px rgba(245, 158, 11, 0.4), 0 0 40px rgba(217, 119, 6, 0.2);
   }
 }
 

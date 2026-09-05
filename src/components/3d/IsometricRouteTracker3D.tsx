@@ -67,24 +67,24 @@ export const IsometricRouteTracker3D: React.FC<IsometricRouteTracker3DProps> = (
   ];
 
   return (
-    <div className="relative w-full rounded-2xl border border-slate-200 bg-white shadow-spatial overflow-hidden p-6 space-y-6">
+    <div className="relative w-full rounded-2xl border border-slate-800 bg-slate-900/90 shadow-2xl overflow-hidden p-6 space-y-6">
       {/* Top Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
+      <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-800">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-            <span className="text-[11px] font-mono uppercase font-bold text-teal-800">
+            <span className="text-[11px] font-mono uppercase font-bold text-teal-400">
               3D ISOMETRIC LOGISTICS CORRIDOR
             </span>
           </div>
-          <h3 className="text-base font-bold text-slate-900 mt-0.5">
+          <h3 className="text-base font-bold text-white mt-0.5">
             Consignment #{shipment.shipmentId} • {shipment.medicineName}
           </h3>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="px-3 py-1.5 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-950 font-mono text-xs font-bold flex items-center gap-1.5 shadow-xs">
-            <ThermometerSnowflake className="w-4 h-4 text-cyan-700 animate-pulse" />
+          <div className="px-3 py-1.5 rounded-xl bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 font-mono text-xs font-bold flex items-center gap-1.5 shadow-xs">
+            <ThermometerSnowflake className="w-4 h-4 text-cyan-400 animate-pulse" />
             <span>{shipment.currentTemp}°C OPTIMAL</span>
           </div>
         </div>
@@ -208,16 +208,16 @@ export const IsometricRouteTracker3D: React.FC<IsometricRouteTracker3DProps> = (
               onClick={() => setActiveWaypoint(idx)}
               className={`p-3.5 rounded-xl border cursor-pointer transition-all ${
                 isSelected
-                  ? 'border-teal-600 bg-teal-50/70 shadow-xs ring-1 ring-teal-600'
-                  : 'border-slate-200 bg-slate-50/50 hover:bg-white hover:border-slate-300'
+                  ? 'border-teal-500 bg-teal-950/50 shadow-md ring-1 ring-teal-500 text-slate-100'
+                  : 'border-slate-800 bg-slate-950/60 hover:bg-slate-900 hover:border-slate-700 text-slate-300'
               }`}
             >
-              <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 mb-1">
+              <div className="flex items-center justify-between text-[10px] font-mono text-slate-400 mb-1">
                 <span>STAGE 0{idx + 1}</span>
-                <span className="font-bold text-teal-800">{wp.temp}°C</span>
+                <span className="font-bold text-teal-400">{wp.temp}°C</span>
               </div>
-              <div className="font-bold text-slate-900 truncate">{wp.title}</div>
-              <div className="text-[11px] text-slate-500 truncate mt-0.5">{wp.location}</div>
+              <div className="font-bold text-white truncate">{wp.title}</div>
+              <div className="text-[11px] text-slate-400 truncate mt-0.5">{wp.location}</div>
             </div>
           );
         })}

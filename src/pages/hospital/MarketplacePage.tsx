@@ -3,6 +3,7 @@ import { useApp } from '../../context/AppContext';
 import { MedicineItem } from '../../types';
 import { Modal } from '../../components/common/Modal';
 import { Tilt3DCard } from '../../components/3d/Tilt3DCard';
+import { BillPreviewModal } from '../../components/hospital/BillPreviewModal';
 import {
   Search,
   Building2,
@@ -17,6 +18,7 @@ import {
   AlertTriangle,
   CalendarClock,
   PackageCheck,
+  FileText
 } from 'lucide-react';
 
 type QuickFilterType = 'all' | 'cold' | 'concession' | 'near-expiry' | 'proximity';
@@ -34,6 +36,7 @@ export const MarketplacePage: React.FC = () => {
   // Request modal state
   const [selectedMedicine, setSelectedMedicine] = useState<MedicineItem | null>(null);
   const [requestedUnits, setRequestedUnits] = useState(20);
+  const [previewMedicine, setPreviewMedicine] = useState<MedicineItem | null>(null);
 
   // Helper: days until expiry
   const getDaysUntilExpiry = (expiryDateStr: string): number => {
@@ -113,15 +116,15 @@ export const MarketplacePage: React.FC = () => {
       <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
         <div className="flex-1">
           {/* Eyebrow compliance badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-sm font-semibold shadow-sm">
-            <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-950/60 border border-teal-700/50 text-teal-300 text-sm font-semibold shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
             Verified Inter-Hospital Exchange • CDSCO & CPCB Compliant
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mt-4 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-white mt-4 leading-tight">
             Surplus Medicine Marketplace
           </h1>
-          <p className="text-base md:text-lg text-slate-500 font-normal leading-relaxed mt-2 max-w-2xl">
+          <p className="text-base md:text-lg text-slate-400 font-normal leading-relaxed mt-2 max-w-2xl">
             Acquire verified surplus medicines at regulated concessions to prevent expiry wastage and reduce patient drug costs.
           </p>
         </div>
@@ -129,33 +132,33 @@ export const MarketplacePage: React.FC = () => {
         {/* SIH Impact Counter — clickable audit view */}
         <button
           onClick={() => setShowImpactModal(true)}
-          className="group bg-white hover:bg-teal-50/60 rounded-2xl border border-slate-200 hover:border-teal-300 px-6 py-5 shadow-sm flex items-center gap-6 self-start transition-all duration-200 text-left cursor-pointer"
+          className="group bg-slate-900/90 hover:bg-slate-850 rounded-2xl border border-slate-800 hover:border-teal-500/50 px-6 py-5 shadow-xl flex items-center gap-6 self-start transition-all duration-200 text-left cursor-pointer"
           title="Click to view SIH Hackathon Impact Audit"
         >
           <div>
             <div className="text-xs uppercase tracking-widest font-semibold text-slate-400">Units Saved</div>
-            <div className="text-2xl font-extrabold text-teal-900 tracking-tight mt-0.5">4,210</div>
+            <div className="text-2xl font-extrabold text-teal-300 tracking-tight mt-0.5">4,210</div>
           </div>
-          <div className="h-10 w-px bg-slate-200" />
+          <div className="h-10 w-px bg-slate-800" />
           <div>
             <div className="text-xs uppercase tracking-widest font-semibold text-slate-400">Cost Saved</div>
-            <div className="text-2xl font-extrabold text-emerald-700 tracking-tight mt-0.5">₹14.8L</div>
+            <div className="text-2xl font-extrabold text-emerald-300 tracking-tight mt-0.5">₹14.8L</div>
           </div>
-          <div className="h-10 w-px bg-slate-200" />
+          <div className="h-10 w-px bg-slate-800" />
           <div>
             <div className="text-xs uppercase tracking-widest font-semibold text-slate-400">Expiries Diverted</div>
-            <div className="text-2xl font-extrabold text-teal-700 tracking-tight mt-0.5">Zero</div>
+            <div className="text-2xl font-extrabold text-teal-400 tracking-tight mt-0.5">Zero</div>
           </div>
-          <div className="hidden xl:flex items-center gap-1 text-teal-600 text-sm font-semibold pl-4 border-l border-slate-200 group-hover:translate-x-1 transition-transform duration-200">
+          <div className="hidden xl:flex items-center gap-1 text-teal-400 text-sm font-semibold pl-4 border-l border-slate-800 group-hover:translate-x-1 transition-transform duration-200">
             Audit View <ArrowRight className="w-4 h-4" />
           </div>
         </button>
       </div>
 
       {/* ── 2. SEARCH & FILTER BAR ── */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="bg-slate-900/90 rounded-2xl border border-slate-800 shadow-xl overflow-hidden">
         {/* Search row */}
-        <div className="flex flex-wrap items-center gap-4 p-5 border-b border-slate-100">
+        <div className="flex flex-wrap items-center gap-4 p-5 border-b border-slate-800">
           {/* Search input — h-14 equivalent */}
           <div className="relative flex-1 min-w-[280px]">
             <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
@@ -164,7 +167,7 @@ export const MarketplacePage: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by salt name, brand, or nearby hospital..."
-              className="w-full h-14 pl-12 pr-4 text-base rounded-xl border border-slate-200 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 bg-white font-medium text-slate-800 placeholder:text-slate-400 transition-all outline-none"
+              className="w-full h-14 pl-12 pr-4 text-base rounded-xl border border-slate-700 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 bg-slate-950 font-medium text-slate-100 placeholder:text-slate-500 transition-all outline-none"
             />
           </div>
 
@@ -172,7 +175,7 @@ export const MarketplacePage: React.FC = () => {
           <select
             value={selectedStorage}
             onChange={(e) => setSelectedStorage(e.target.value)}
-            className="h-14 px-4 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 transition-all outline-none cursor-pointer"
+            className="h-14 px-4 rounded-xl border border-slate-700 bg-slate-950 text-sm font-medium text-slate-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all outline-none cursor-pointer"
             aria-label="Storage Protocol"
           >
             <option value="all">Storage Protocol</option>
@@ -183,7 +186,7 @@ export const MarketplacePage: React.FC = () => {
           <select
             value={selectedDosage}
             onChange={(e) => setSelectedDosage(e.target.value)}
-            className="h-14 px-4 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 transition-all outline-none cursor-pointer"
+            className="h-14 px-4 rounded-xl border border-slate-700 bg-slate-950 text-sm font-medium text-slate-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all outline-none cursor-pointer"
             aria-label="Formulation"
           >
             <option value="all">Formulation</option>
@@ -196,7 +199,7 @@ export const MarketplacePage: React.FC = () => {
           <select
             value={selectedProximity}
             onChange={(e) => setSelectedProximity(e.target.value)}
-            className="h-14 px-4 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 transition-all outline-none cursor-pointer"
+            className="h-14 px-4 rounded-xl border border-slate-700 bg-slate-950 text-sm font-medium text-slate-200 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 transition-all outline-none cursor-pointer"
             aria-label="Radius"
           >
             <option value="all">Radius: All India</option>
@@ -217,19 +220,19 @@ export const MarketplacePage: React.FC = () => {
           ].map(({ key, label, color, icon }) => {
             const active = quickFilter === key;
             const activeClasses: Record<string, string> = {
-              teal: 'bg-teal-700 text-white border-teal-700',
-              cyan: 'bg-cyan-700 text-white border-cyan-700',
-              emerald: 'bg-emerald-700 text-white border-emerald-700',
-              amber: 'bg-amber-600 text-white border-amber-600',
+              teal: 'bg-teal-600 text-white border-teal-500 shadow-md',
+              cyan: 'bg-cyan-600 text-white border-cyan-500 shadow-md',
+              emerald: 'bg-emerald-600 text-white border-emerald-500 shadow-md',
+              amber: 'bg-amber-600 text-white border-amber-500 shadow-md',
             };
             return (
               <button
                 key={key}
                 onClick={() => setQuickFilter(key)}
-                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-150 ${
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-150 cursor-pointer ${
                   active
                     ? activeClasses[color]
-                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+                    : 'bg-slate-950 text-slate-300 border-slate-800 hover:bg-slate-800 hover:border-slate-700'
                 }`}
               >
                 {icon}
@@ -243,12 +246,12 @@ export const MarketplacePage: React.FC = () => {
       {/* ── 3. MEDICINE CARDS GRID ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {filteredMedicines.length === 0 ? (
-          <div className="col-span-3 py-20 text-center bg-white rounded-2xl border border-slate-200 shadow-sm">
-            <div className="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+          <div className="col-span-3 py-20 text-center bg-slate-900/90 rounded-2xl border border-slate-800 shadow-xl">
+            <div className="w-14 h-14 rounded-full bg-slate-950 flex items-center justify-center mx-auto mb-4 border border-slate-800">
               <Search className="w-6 h-6 text-slate-400" />
             </div>
-            <div className="text-lg font-semibold text-slate-800">No surplus medicines found</div>
-            <p className="text-sm text-slate-500 mt-1.5">Try resetting the quick filters or adjusting your search.</p>
+            <div className="text-lg font-semibold text-white">No surplus medicines found</div>
+            <p className="text-sm text-slate-400 mt-1.5">Try resetting the quick filters or adjusting your search.</p>
             <button
               onClick={() => {
                 setSearchQuery('');
@@ -257,7 +260,7 @@ export const MarketplacePage: React.FC = () => {
                 setSelectedDosage('all');
                 setSelectedProximity('all');
               }}
-              className="mt-5 px-5 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold transition-colors"
+              className="mt-5 px-5 py-2.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-sm font-semibold transition-colors cursor-pointer"
             >
               Reset Filters
             </button>
@@ -278,98 +281,100 @@ export const MarketplacePage: React.FC = () => {
               <Tilt3DCard
                 key={med.id}
                 maxTilt={3}
-                className="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_24px_rgba(0,0,0,0.05)] hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col"
+                className="bg-slate-900/90 rounded-2xl border border-slate-800 shadow-xl hover:shadow-2xl hover:border-teal-500/50 hover:-translate-y-1 transition-all duration-200 flex flex-col justify-between"
               >
-                {/* ── TOP UTILITY ROW ── */}
-                <div className="flex items-center justify-between px-7 pt-6 pb-5 border-b border-slate-100">
-                  <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                    <div className="w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center shrink-0">
-                      <Building2 className="w-4 h-4 text-teal-700" />
+                <div>
+                  {/* ── TOP UTILITY ROW ── */}
+                  <div className="flex items-center justify-between px-7 pt-6 pb-5 border-b border-slate-800">
+                    <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                      <div className="w-8 h-8 rounded-lg bg-teal-950/60 border border-teal-800/60 flex items-center justify-center shrink-0">
+                        <Building2 className="w-4 h-4 text-teal-400" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="text-base font-semibold text-slate-100 truncate leading-tight">
+                          {med.hospitalName}
+                        </div>
+                        <div className="flex items-center gap-1 mt-0.5">
+                          <MapPin className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                          <span className="text-sm text-slate-400">{distance} km away</span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <div className="text-base font-semibold text-slate-800 truncate leading-tight">
-                        {med.hospitalName}
-                      </div>
-                      <div className="flex items-center gap-1 mt-0.5">
-                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        <span className="text-sm text-slate-500">{distance} km away</span>
-                      </div>
+
+                    {/* Verified badge */}
+                    <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-950/60 border border-emerald-800/60 text-emerald-300 text-xs font-semibold shrink-0 ml-3">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      NABH Verified
                     </div>
                   </div>
 
-                  {/* Verified badge */}
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold shrink-0 ml-3">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    NABH Verified
+                  {/* ── CORE CLINICAL IDENTITY ── */}
+                  <div className="px-7 my-5">
+                    <h3 className="text-2xl font-bold text-white leading-snug">
+                      {med.brandName}
+                    </h3>
+                    <p className="text-sm md:text-base text-slate-400 font-medium leading-normal mt-1.5 line-clamp-2">
+                      {med.genericComposition}
+                    </p>
                   </div>
-                </div>
 
-                {/* ── CORE CLINICAL IDENTITY ── */}
-                <div className="px-7 my-5">
-                  <h3 className="text-2xl font-bold text-slate-900 leading-snug">
-                    {med.brandName}
-                  </h3>
-                  <p className="text-sm md:text-base text-slate-600 font-medium leading-normal mt-1.5 line-clamp-2">
-                    {med.genericComposition}
-                  </p>
-                </div>
+                  {/* ── ATTRIBUTE TAG RIBBON ── */}
+                  <div className="px-7 flex flex-wrap items-center gap-2.5 pb-1">
+                    {/* Temperature / Storage Tag */}
+                    {isColdChain ? (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 text-sm font-semibold">
+                        <ThermometerSnowflake className="w-4 h-4 text-cyan-400" />
+                        Cold-Chain (2°C – 8°C)
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-950 border border-slate-800 text-slate-300 text-sm font-semibold">
+                        Room Temp (15–25°C)
+                      </span>
+                    )}
 
-                {/* ── ATTRIBUTE TAG RIBBON ── */}
-                <div className="px-7 flex flex-wrap items-center gap-2.5 pb-1">
-                  {/* Temperature / Storage Tag */}
-                  {isColdChain ? (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-sm font-semibold">
-                      <ThermometerSnowflake className="w-4 h-4 text-cyan-600" />
-                      Cold-Chain (2°C – 8°C)
+                    {/* Form / Strength Tag */}
+                    <span className="px-3 py-1.5 rounded-full bg-slate-950 border border-slate-800 text-slate-300 text-sm font-semibold">
+                      {med.dosageForm.includes('Vial') ? `${med.strength} IV Vial` : `${med.dosageForm} • ${med.strength}`}
                     </span>
-                  ) : (
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-sm font-semibold">
-                      Room Temp (15–25°C)
+
+                    {/* Expiry Badge with traffic-light color dot */}
+                    <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-semibold ${
+                      isNearExpiry
+                        ? 'bg-amber-950/60 border-amber-800/60 text-amber-300'
+                        : isLongExpiry
+                        ? 'bg-emerald-950/60 border-emerald-800/60 text-emerald-300'
+                        : 'bg-slate-950 border-slate-800 text-slate-300'
+                    }`}>
+                      <span className={`w-2 h-2 rounded-full shrink-0 ${
+                        isNearExpiry ? 'bg-amber-400' : isLongExpiry ? 'bg-emerald-400' : 'bg-slate-500'
+                      }`} />
+                      <CalendarClock className="w-3.5 h-3.5 shrink-0" />
+                      {expiryLabel}
                     </span>
-                  )}
 
-                  {/* Form / Strength Tag */}
-                  <span className="px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-sm font-semibold">
-                    {med.dosageForm.includes('Vial') ? `${med.strength} IV Vial` : `${med.dosageForm} • ${med.strength}`}
-                  </span>
-
-                  {/* Expiry Badge with traffic-light color dot */}
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-semibold ${
-                    isNearExpiry
-                      ? 'bg-amber-50 border-amber-300 text-amber-900'
-                      : isLongExpiry
-                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
-                      : 'bg-slate-50 border-slate-200 text-slate-700'
-                  }`}>
-                    <span className={`w-2 h-2 rounded-full shrink-0 ${
-                      isNearExpiry ? 'bg-amber-500' : isLongExpiry ? 'bg-emerald-500' : 'bg-slate-400'
-                    }`} />
-                    <CalendarClock className="w-3.5 h-3.5 shrink-0" />
-                    {expiryLabel}
-                  </span>
-
-                  {/* Batch number — monospace only for regulatory ID */}
-                  <span className="px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 font-mono text-xs text-slate-400">
-                    Batch #{med.batchNumber}
-                  </span>
+                    {/* Batch number — monospace only for regulatory ID */}
+                    <span className="px-2.5 py-1 rounded-md bg-slate-950 border border-slate-800 font-mono text-xs text-slate-400">
+                      Batch #{med.batchNumber}
+                    </span>
+                  </div>
                 </div>
 
                 {/* ── COMMERCIAL & CONVERSION FOOTER ── */}
-                <div className="mx-7 mt-6 mb-7 bg-slate-50/80 rounded-2xl border border-slate-100 p-5">
+                <div className="mx-7 mt-6 mb-7 bg-slate-950/80 rounded-2xl border border-slate-800 p-5">
                   <div className="flex items-end justify-between gap-4">
                     {/* Pricing block */}
                     <div>
                       <div className="flex items-baseline gap-2 flex-wrap">
-                        <span className="text-3xl font-extrabold text-emerald-950 tracking-tight">
+                        <span className="text-3xl font-extrabold text-teal-300 tracking-tight">
                           ₹{med.transferPricePerUnit.toLocaleString()}
                         </span>
-                        <span className="text-base text-slate-500 font-normal">/ unit</span>
+                        <span className="text-base text-slate-400 font-normal">/ unit</span>
                       </div>
                       <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
-                        <span className="text-base text-slate-400 line-through">
+                        <span className="text-base text-slate-500 line-through">
                           MRP ₹{med.mrpPerUnit.toLocaleString()}
                         </span>
-                        <span className="text-sm font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">
+                        <span className="text-sm font-bold bg-emerald-950/70 border border-emerald-800/60 text-emerald-300 px-3 py-1 rounded-full">
                           Save {med.concessionPercentage}%
                         </span>
                       </div>
@@ -377,17 +382,29 @@ export const MarketplacePage: React.FC = () => {
 
                     {/* Stock + CTA block */}
                     <div className="flex flex-col items-end gap-2.5 shrink-0">
-                      <div className="flex items-center gap-1.5 text-sm text-slate-500 font-medium">
-                        <PackageCheck className="w-4 h-4 text-teal-600" />
-                        <strong className="text-slate-800 font-semibold">{med.availableUnits}</strong> units left
+                      <div className="flex items-center gap-1.5 text-sm text-slate-400 font-medium">
+                        <PackageCheck className="w-4 h-4 text-teal-400" />
+                        <strong className="text-white font-semibold">{med.availableUnits}</strong> units left
                       </div>
-                      <button
-                        onClick={() => handleOpenRequest(med)}
-                        className="h-12 px-6 text-base font-semibold rounded-xl bg-teal-800 hover:bg-teal-900 text-white shadow-sm flex items-center gap-2 transition-all duration-200 hover:shadow-md active:scale-[0.98] cursor-pointer"
-                      >
-                        Request Transfer
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setPreviewMedicine(med)}
+                          className="h-12 px-3.5 text-xs font-semibold rounded-xl border border-slate-700 hover:border-teal-500 hover:bg-slate-800 text-slate-200 flex items-center gap-1.5 transition-all cursor-pointer shadow-xs"
+                          title="Inspect Original Supplier Invoice (PDF)"
+                        >
+                          <FileText className="w-4 h-4 text-teal-400" />
+                          <span>Inspect Invoice</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleOpenRequest(med)}
+                          className="h-12 px-5 text-sm font-semibold rounded-xl bg-teal-600 hover:bg-teal-500 text-white shadow-md flex items-center gap-2 transition-all duration-200 hover:shadow-lg active:scale-[0.98] cursor-pointer"
+                        >
+                          <span>Initiate Purchase Requisition</span>
+                          <ArrowRight className="w-4 h-4" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -407,40 +424,40 @@ export const MarketplacePage: React.FC = () => {
       >
         <div className="space-y-5">
           <div className="grid grid-cols-3 gap-4">
-            <div className="p-4 rounded-xl bg-teal-50 border border-teal-200">
-              <div className="text-xs uppercase font-semibold tracking-wider text-teal-700">Total Units Saved</div>
-              <div className="text-2xl font-extrabold text-teal-950 mt-1">4,210 Units</div>
-              <div className="text-sm text-teal-700 mt-1">Across 18 regional hospital nodes</div>
+            <div className="p-4 rounded-xl bg-teal-950/40 border border-teal-800/60 text-teal-200">
+              <div className="text-xs uppercase font-semibold tracking-wider text-teal-400">Total Units Saved</div>
+              <div className="text-2xl font-extrabold text-teal-300 mt-1">4,210 Units</div>
+              <div className="text-sm text-teal-400 mt-1">Across 18 regional hospital nodes</div>
             </div>
-            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
-              <div className="text-xs uppercase font-semibold tracking-wider text-emerald-700">Net Cost Conserved</div>
-              <div className="text-2xl font-extrabold text-emerald-950 mt-1">₹14.82 Lakhs</div>
-              <div className="text-sm text-emerald-700 mt-1">Direct savings for patients & hospitals</div>
+            <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-800/60 text-emerald-200">
+              <div className="text-xs uppercase font-semibold tracking-wider text-emerald-400">Net Cost Conserved</div>
+              <div className="text-2xl font-extrabold text-emerald-300 mt-1">₹14.82 Lakhs</div>
+              <div className="text-sm text-emerald-400 mt-1">Direct savings for patients & hospitals</div>
             </div>
-            <div className="p-4 rounded-xl bg-cyan-50 border border-cyan-200">
-              <div className="text-xs uppercase font-semibold tracking-wider text-cyan-700">Zero Expiry Wastage</div>
-              <div className="text-2xl font-extrabold text-cyan-950 mt-1">0 to Landfill</div>
-              <div className="text-sm text-cyan-700 mt-1">100% salvaged or bioremediated</div>
+            <div className="p-4 rounded-xl bg-cyan-950/40 border border-cyan-800/60 text-cyan-200">
+              <div className="text-xs uppercase font-semibold tracking-wider text-cyan-400">Zero Expiry Wastage</div>
+              <div className="text-2xl font-extrabold text-cyan-300 mt-1">0 to Landfill</div>
+              <div className="text-sm text-cyan-400 mt-1">100% salvaged or bioremediated</div>
             </div>
           </div>
 
-          <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-            <div className="text-base font-bold text-slate-800 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-teal-700" />
+          <div className="p-5 rounded-xl bg-slate-950/70 border border-slate-800 space-y-3">
+            <div className="text-base font-bold text-white flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-teal-400" />
               Why the MedEx Model Works for Smart India Hackathon
             </div>
-            <p className="text-sm text-slate-600 leading-relaxed">
+            <p className="text-sm text-slate-400 leading-relaxed">
               In standard procurement, critical formulations (such as IV Ceftriaxone, Meropenem, and Enoxaparin) often expire unused in one tertiary hospital while neighbouring secondary centers experience acute stockouts. MedEx automates inter-hospital inventory visibility with strict CDSCO compliance and cold-chain temperature monitoring.
             </p>
-            <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-200">
+            <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-800">
               {[
                 'CDSCO Form 20B/21B Wholesale Compliance',
                 'CPCB Biomedical Waste Neutralization Logging',
                 'Automated 30-Day Expiry Regulatory Lockout',
                 'IoT Cold-Chain Telemetry Verification (2°C – 8°C)',
               ].map((item) => (
-                <div key={item} className="flex items-start gap-2 text-sm text-slate-700 font-medium">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                <div key={item} className="flex items-start gap-2 text-sm text-slate-300 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
                   <span>{item}</span>
                 </div>
               ))}
@@ -450,7 +467,7 @@ export const MarketplacePage: React.FC = () => {
           <div className="flex justify-end pt-1">
             <button
               onClick={() => setShowImpactModal(false)}
-              className="h-11 px-6 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-semibold text-sm transition-colors cursor-pointer"
+              className="h-11 px-6 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-semibold text-sm transition-colors cursor-pointer"
             >
               Close Audit View
             </button>
@@ -468,16 +485,16 @@ export const MarketplacePage: React.FC = () => {
       >
         {selectedMedicine && (
           <form onSubmit={handleConfirmRequest} className="space-y-5">
-            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <div className="font-bold text-slate-900 text-base">{selectedMedicine.brandName} ({selectedMedicine.strength})</div>
-              <div className="text-sm text-slate-600 mt-0.5">{selectedMedicine.genericComposition}</div>
+            <div className="p-4 rounded-xl bg-slate-950/70 border border-slate-800">
+              <div className="font-bold text-white text-base">{selectedMedicine.brandName} ({selectedMedicine.strength})</div>
+              <div className="text-sm text-slate-400 mt-0.5">{selectedMedicine.genericComposition}</div>
               <div className="font-mono text-slate-500 text-xs mt-2">
                 Batch: {selectedMedicine.batchNumber} • Expiry: {selectedMedicine.expiryDate} • Storage: {selectedMedicine.storageCondition}
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
+              <label className="block text-sm font-semibold text-slate-300 mb-2">
                 Requested Quantity (Units) *
               </label>
               <div className="flex items-center gap-4">
@@ -488,60 +505,67 @@ export const MarketplacePage: React.FC = () => {
                   required
                   value={requestedUnits}
                   onChange={(e) => setRequestedUnits(Math.min(selectedMedicine.availableUnits, Math.max(1, Number(e.target.value))))}
-                  className="w-36 font-bold text-base px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-600 bg-white outline-none"
+                  className="w-36 font-bold text-base px-4 py-3 rounded-xl border border-slate-700 focus:ring-2 focus:ring-teal-500 bg-slate-950 text-white outline-none"
                 />
-                <span className="text-sm text-slate-500">
-                  Max available: <strong className="text-slate-800">{selectedMedicine.availableUnits}</strong> units
+                <span className="text-sm text-slate-400">
+                  Max available: <strong className="text-white">{selectedMedicine.availableUnits}</strong> units
                 </span>
               </div>
             </div>
 
             {/* Financial Summary */}
-            <div className="p-4 rounded-xl bg-teal-50/80 border border-teal-200 text-teal-950 space-y-2">
+            <div className="p-4 rounded-xl bg-teal-950/40 border border-teal-800/60 text-teal-200 space-y-2">
               <div className="flex justify-between text-sm">
-                <span>Unit Rate:</span>
-                <span className="font-semibold">₹{selectedMedicine.transferPricePerUnit.toLocaleString()}</span>
+                <span className="text-slate-300">Unit Rate:</span>
+                <span className="font-semibold text-white">₹{selectedMedicine.transferPricePerUnit.toLocaleString()}</span>
               </div>
               <div className="flex justify-between text-sm">
-                <span>Base Requisition Total:</span>
-                <span className="font-bold">₹{(selectedMedicine.transferPricePerUnit * requestedUnits).toLocaleString()}</span>
+                <span className="text-slate-300">Base Requisition Total:</span>
+                <span className="font-bold text-white">₹{(selectedMedicine.transferPricePerUnit * requestedUnits).toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-xs text-teal-700">
+              <div className="flex justify-between text-xs text-teal-400">
                 <span>Platform Compliance & Escrow Fee (2%):</span>
                 <span>₹{Math.round(selectedMedicine.transferPricePerUnit * requestedUnits * 0.02).toLocaleString()}</span>
               </div>
-              <div className="pt-2 border-t border-teal-200 flex justify-between font-bold text-base text-teal-950">
+              <div className="pt-2 border-t border-teal-800/60 flex justify-between font-bold text-base text-teal-300">
                 <span>Estimated Net Payable:</span>
                 <span>₹{Math.round(selectedMedicine.transferPricePerUnit * requestedUnits * 1.02).toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-sm flex items-start gap-2.5">
-              <Clock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+            <div className="p-3.5 rounded-xl bg-blue-950/40 border border-blue-800/60 text-blue-200 text-sm flex items-start gap-2.5">
+              <Clock className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
               <span>
                 Requisition is sent directly to the seller hospital's Chief Pharmacist. Upon approval, pay via Razorpay Escrow to trigger immediate refrigerated dispatch.
               </span>
             </div>
 
-            <div className="pt-3 border-t border-slate-200 flex justify-end gap-3">
+            <div className="pt-3 border-t border-slate-800 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setSelectedMedicine(null)}
-                className="px-5 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
+                className="px-5 py-2.5 text-sm font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800/50 rounded-xl transition-colors cursor-pointer"
               >
-                Cancel
+                Cancel & Close Requisition
               </button>
               <button
                 type="submit"
-                className="h-11 px-6 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm shadow-sm flex items-center gap-2 transition-colors"
+                className="h-11 px-6 rounded-xl bg-teal-600 hover:bg-teal-500 text-white font-bold text-sm shadow-md flex items-center gap-2 transition-colors cursor-pointer"
               >
                 <Send className="w-4 h-4" />
-                Dispatch Requisition
+                Confirm & Dispatch Purchase Requisition
               </button>
             </div>
           </form>
         )}
       </Modal>
+
+      {/* Bill Preview Modal */}
+      <BillPreviewModal
+        isOpen={!!previewMedicine}
+        onClose={() => setPreviewMedicine(null)}
+        medicine={previewMedicine}
+      />
     </div>
   );
 };

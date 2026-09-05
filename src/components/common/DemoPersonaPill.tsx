@@ -9,8 +9,8 @@ export const DemoPersonaPill: React.FC = () => {
   const roles = [
     {
       id: 'public',
-      label: 'Public Door',
-      description: 'Visitor & Patient View',
+      label: 'Public Gateway',
+      description: 'Public Landing & Statutory Portals',
       icon: <Globe className="w-3.5 h-3.5" />,
       color: 'text-slate-700',
       activeBg: 'bg-slate-900 text-white',
@@ -21,8 +21,8 @@ export const DemoPersonaPill: React.FC = () => {
     },
     {
       id: 'hospital',
-      label: 'Apollo Hospital',
-      description: 'Hospital Inventory & Marketplace',
+      label: 'Apollo Hospital Node',
+      description: 'Smart Formulary, Escrow & Telemetry',
       icon: <Building2 className="w-3.5 h-3.5" />,
       color: 'text-teal-700',
       activeBg: 'bg-teal-700 text-white',
@@ -33,8 +33,8 @@ export const DemoPersonaPill: React.FC = () => {
     },
     {
       id: 'admin',
-      label: 'CDSCO Admin',
-      description: 'Central Regulatory Oversight',
+      label: 'CDSCO Central Directorate',
+      description: 'Surveillance, Incineration & Disputes',
       icon: <ShieldAlert className="w-3.5 h-3.5" />,
       color: 'text-rose-700',
       activeBg: 'bg-rose-700 text-white',
@@ -51,12 +51,12 @@ export const DemoPersonaPill: React.FC = () => {
     <div className="fixed bottom-5 right-5 z-50 select-none">
       {/* Expanded Menu */}
       {isOpen && (
-        <div className="mb-2 p-2 bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200/90 shadow-spatial w-64 animate-in fade-in slide-in-from-bottom-3 duration-150">
-          <div className="px-3 py-1.5 border-b border-slate-100 flex items-center justify-between">
+        <div className="mb-2 p-2 bg-slate-900/98 backdrop-blur-2xl rounded-2xl border border-slate-700/90 shadow-2xl w-72 animate-in fade-in slide-in-from-bottom-3 duration-150">
+          <div className="px-3 py-1.5 border-b border-slate-800 flex items-center justify-between">
             <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-slate-400">
               Instant Persona Switcher
             </span>
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
           </div>
 
           <div className="mt-1 space-y-1">
@@ -69,10 +69,10 @@ export const DemoPersonaPill: React.FC = () => {
                     item.onSelect();
                     setIsOpen(false);
                   }}
-                  className={`w-full px-3 py-2 rounded-xl text-left flex items-center justify-between transition-all ${
+                  className={`w-full px-3 py-2 rounded-xl text-left flex items-center justify-between transition-all cursor-pointer ${
                     isSelected
                       ? `${item.activeBg} font-semibold shadow-xs`
-                      : 'hover:bg-slate-100 text-slate-700'
+                      : 'hover:bg-slate-800 text-slate-300'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -80,7 +80,7 @@ export const DemoPersonaPill: React.FC = () => {
                       {item.icon}
                     </span>
                     <div>
-                      <div className="text-xs">{item.label}</div>
+                      <div className="text-xs font-semibold">{item.label}</div>
                       <div className={`text-[10px] ${isSelected ? 'text-white/80' : 'text-slate-400'}`}>
                         {item.description}
                       </div>

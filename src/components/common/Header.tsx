@@ -416,16 +416,16 @@ interface SectionButtonProps {
 const SectionButton: React.FC<SectionButtonProps> = ({ active, onClick, icon, label, badge }) => (
   <button
     onClick={onClick}
-    className={`inline-flex items-center gap-2 px-3 py-1.5 text-xs rounded-lg font-medium transition-all ${
+    className={`inline-flex items-center gap-2 px-3.5 py-2 text-sm rounded-lg font-semibold transition-all ${
       active
-        ? 'bg-white text-teal-900 shadow-xs border border-teal-600/30 font-semibold ring-1 ring-teal-500/20'
+        ? 'bg-white text-teal-900 shadow-sm border border-teal-600/30 ring-1 ring-teal-500/20'
         : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/70'
     }`}
   >
     <span className={active ? 'text-teal-700' : 'text-slate-500'}>{icon}</span>
     <span>{label}</span>
     {badge && (
-      <span className="ml-0.5 px-1.5 py-0.2 bg-amber-500 text-white text-[10px] font-bold rounded-full animate-pulse">
+      <span className="ml-0.5 px-1.5 py-0.5 bg-amber-500 text-white text-[10px] font-bold rounded-full animate-pulse">
         {badge}
       </span>
     )}
@@ -442,15 +442,15 @@ interface SubTabButtonProps {
 const SubTabButton: React.FC<SubTabButtonProps> = ({ active, onClick, label, badge }) => (
   <button
     onClick={onClick}
-    className={`px-2.5 py-1 text-[11px] rounded-md font-medium transition-all ${
+    className={`px-3 py-1.5 text-xs rounded-md font-semibold transition-all ${
       active
-        ? 'bg-teal-700 text-white font-semibold shadow-2xs'
+        ? 'bg-teal-700 text-white shadow-sm'
         : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
     }`}
   >
     <span>{label}</span>
     {badge && (
-      <span className="ml-1.5 px-1.5 py-0.2 bg-amber-400 text-slate-900 text-[10px] font-bold rounded-full">
+      <span className="ml-1.5 px-1.5 py-0.5 bg-amber-400 text-slate-900 text-[10px] font-bold rounded-full">
         {badge}
       </span>
     )}

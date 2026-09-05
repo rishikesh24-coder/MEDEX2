@@ -10,14 +10,13 @@ import {
   ThermometerSnowflake,
   ShieldCheck,
   ArrowRight,
-  Filter,
   CheckCircle2,
   Clock,
   Send,
   TrendingUp,
-  Sparkles,
-  Award,
-  AlertTriangle
+  AlertTriangle,
+  CalendarClock,
+  PackageCheck,
 } from 'lucide-react';
 
 type QuickFilterType = 'all' | 'cold' | 'concession' | 'near-expiry' | 'proximity';
@@ -30,27 +29,33 @@ export const MarketplacePage: React.FC = () => {
   const [selectedDosage, setSelectedDosage] = useState<string>('all');
   const [selectedProximity, setSelectedProximity] = useState<string>('all');
   const [quickFilter, setQuickFilter] = useState<QuickFilterType>('all');
-
   const [showImpactModal, setShowImpactModal] = useState(false);
 
   // Request modal state
   const [selectedMedicine, setSelectedMedicine] = useState<MedicineItem | null>(null);
   const [requestedUnits, setRequestedUnits] = useState(20);
 
-  // Helper functions for expiry and distance calculations
+  // Helper: days until expiry
   const getDaysUntilExpiry = (expiryDateStr: string): number => {
     const expiry = new Date(expiryDateStr);
-    const now = new Date('2026-09-05'); // Platform standard evaluation date
+    const now = new Date('2026-09-05');
     const diffTime = expiry.getTime() - now.getTime();
     return Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
   };
 
+  // Helper: parse distance from location string
   const getDistanceKm = (locationStr: string): number => {
     const match = locationStr.match(/\((\d+(\.\d+)?)\s*km\s*away\)/i);
     return match ? parseFloat(match[1]) : 15;
   };
 
-  // Filter surplus medicines: only show other hospitals' available stock (not locked for bio-waste)
+  // Format expiry date readable e.g. "Apr 2027"
+  const formatExpiryDate = (expiryDateStr: string): string => {
+    const date = new Date(expiryDateStr);
+    return date.toLocaleDateString('en-IN', { month: 'short', year: 'numeric' });
+  };
+
+  // Filtered marketplace medicines (exclude own hospital, unavailable stock)
   const marketplaceMedicines = useMemo(() => {
     return medicines.filter(
       (m) => m.hospitalId !== currentHospital.id && m.status === 'available'
@@ -59,20 +64,17 @@ export const MarketplacePage: React.FC = () => {
 
   const filteredMedicines = useMemo(() => {
     return marketplaceMedicines.filter((m) => {
-      // 1. Text Search
       const matchesSearch =
         m.brandName.toLowerCase().includes(searchQuery.toLowerCase()) ||
         m.genericComposition.toLowerCase().includes(searchQuery.toLowerCase()) ||
         m.hospitalName.toLowerCase().includes(searchQuery.toLowerCase());
 
-      // 2. Dropdown Filters
       const matchesStorage = selectedStorage === 'all' || m.storageCondition.includes(selectedStorage);
       const matchesDosage = selectedDosage === 'all' || m.dosageForm === selectedDosage;
       const matchesProximity =
         selectedProximity === 'all' ||
         (selectedProximity === 'ncr' && getDistanceKm(m.hospitalLocation) <= 25);
 
-      // 3. Quick Chips
       const daysLeft = getDaysUntilExpiry(m.expiryDate);
       const distance = getDistanceKm(m.hospitalLocation);
 
@@ -105,185 +107,148 @@ export const MarketplacePage: React.FC = () => {
   };
 
   return (
-    <div className="py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-6">
-      {/* 1. Header & SIH Value Banner */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-2">
-        <div>
-          {/* Soft Authoritative Badge */}
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-200/80 text-teal-800 text-xs font-medium shadow-2xs">
-            <span className="w-1.5 h-1.5 rounded-full bg-teal-600" />
-            <span>Verified Inter-Hospital Exchange • CDSCO & CPCB Compliant</span>
+    <div className="py-10 px-6 max-w-7xl mx-auto space-y-8">
+
+      {/* ── 1. PAGE HEADER & SIH IMPACT COUNTER ── */}
+      <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-8">
+        <div className="flex-1">
+          {/* Eyebrow compliance badge */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-50 border border-teal-200 text-teal-800 text-sm font-semibold shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-teal-500 animate-pulse" />
+            Verified Inter-Hospital Exchange • CDSCO & CPCB Compliant
           </div>
 
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 font-display tracking-tight mt-2">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 mt-4 leading-tight">
             Surplus Medicine Marketplace
           </h1>
-
-          <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal max-w-2xl mt-1">
-            Acquire verified surplus medicines at regulated concessions to prevent expiry wastage and lower patient drug costs.
+          <p className="text-base md:text-lg text-slate-500 font-normal leading-relaxed mt-2 max-w-2xl">
+            Acquire verified surplus medicines at regulated concessions to prevent expiry wastage and reduce patient drug costs.
           </p>
         </div>
 
-        {/* 1-Click SIH Impact Counter Mini-Banner */}
+        {/* SIH Impact Counter — clickable audit view */}
         <button
           onClick={() => setShowImpactModal(true)}
-          className="bg-white hover:bg-teal-50/40 rounded-2xl border border-slate-200/90 p-3.5 sm:px-5 sm:py-3 shadow-spatial flex items-center gap-4 sm:gap-6 self-start lg:self-auto select-none transition-all group text-left cursor-pointer hover:border-teal-300"
+          className="group bg-white hover:bg-teal-50/60 rounded-2xl border border-slate-200 hover:border-teal-300 px-6 py-5 shadow-sm flex items-center gap-6 self-start transition-all duration-200 text-left cursor-pointer"
           title="Click to view SIH Hackathon Impact Audit"
         >
-          <div className="text-center sm:text-left">
-            <div className="text-[10px] uppercase tracking-wider font-semibold text-slate-400 font-sans">Units Saved</div>
-            <div className="text-base sm:text-lg font-bold text-teal-900 font-sans tracking-tight">4,210 Units Saved</div>
+          <div>
+            <div className="text-xs uppercase tracking-widest font-semibold text-slate-400">Units Saved</div>
+            <div className="text-2xl font-extrabold text-teal-900 tracking-tight mt-0.5">4,210</div>
           </div>
-
-          <div className="h-8 w-px bg-slate-200" />
-
-          <div className="text-center sm:text-left">
-            <div className="text-[10px] uppercase tracking-wider font-semibold text-slate-400 font-sans">Cost Saved</div>
-            <div className="text-base sm:text-lg font-bold text-emerald-700 font-sans tracking-tight">₹14.8L Cost Saved</div>
+          <div className="h-10 w-px bg-slate-200" />
+          <div>
+            <div className="text-xs uppercase tracking-widest font-semibold text-slate-400">Cost Saved</div>
+            <div className="text-2xl font-extrabold text-emerald-700 tracking-tight mt-0.5">₹14.8L</div>
           </div>
-
-          <div className="h-8 w-px bg-slate-200" />
-
-          <div className="text-center sm:text-left">
-            <div className="text-[10px] uppercase tracking-wider font-semibold text-slate-400 font-sans">Expiries Diverted</div>
-            <div className="text-base sm:text-lg font-bold text-teal-700 font-sans tracking-tight">0 Expiries Diverted</div>
+          <div className="h-10 w-px bg-slate-200" />
+          <div>
+            <div className="text-xs uppercase tracking-widest font-semibold text-slate-400">Expiries Diverted</div>
+            <div className="text-2xl font-extrabold text-teal-700 tracking-tight mt-0.5">Zero</div>
           </div>
-
-          <div className="hidden xl:flex items-center text-teal-700 text-xs font-semibold pl-2 border-l border-slate-200 group-hover:translate-x-0.5 transition-transform">
-            <span>Audit View →</span>
+          <div className="hidden xl:flex items-center gap-1 text-teal-600 text-sm font-semibold pl-4 border-l border-slate-200 group-hover:translate-x-1 transition-transform duration-200">
+            Audit View <ArrowRight className="w-4 h-4" />
           </div>
         </button>
       </div>
 
-      {/* 2. Streamlined Filter Bar with Quick Demo Chips */}
-      <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/90 shadow-[0_4px_20px_rgba(0,0,0,0.03)] space-y-3.5">
-        {/* Top Search & Dropdown Selectors */}
-        <div className="flex flex-wrap items-center justify-between gap-3 text-xs">
-          <div className="relative flex-1 min-w-[260px]">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+      {/* ── 2. SEARCH & FILTER BAR ── */}
+      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+        {/* Search row */}
+        <div className="flex flex-wrap items-center gap-4 p-5 border-b border-slate-100">
+          {/* Search input — h-14 equivalent */}
+          <div className="relative flex-1 min-w-[280px]">
+            <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by molecule (e.g. Meropenem), brand (e.g. Magnex), or hospital..."
-              className="w-full pl-10 pr-3.5 py-2.5 rounded-xl border border-slate-200 focus:border-teal-600 focus:ring-1 focus:ring-teal-600 bg-white font-medium text-slate-800 transition-colors shadow-2xs"
+              placeholder="Search by salt name, brand, or nearby hospital..."
+              className="w-full h-14 pl-12 pr-4 text-base rounded-xl border border-slate-200 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 bg-white font-medium text-slate-800 placeholder:text-slate-400 transition-all outline-none"
             />
           </div>
 
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <div className="flex items-center gap-1.5">
-              <select
-                value={selectedStorage}
-                onChange={(e) => setSelectedStorage(e.target.value)}
-                className="px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 focus:border-teal-600 transition-colors shadow-2xs"
-              >
-                <option value="all">All Storage Protocols</option>
-                <option value="Cold-Chain">Cold-Chain (2-8°C)</option>
-                <option value="Ambient">Room Temp (15-25°C)</option>
-              </select>
-            </div>
+          {/* Filter dropdowns — h-14 */}
+          <select
+            value={selectedStorage}
+            onChange={(e) => setSelectedStorage(e.target.value)}
+            className="h-14 px-4 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 transition-all outline-none cursor-pointer"
+            aria-label="Storage Protocol"
+          >
+            <option value="all">Storage Protocol</option>
+            <option value="Cold-Chain">Cold-Chain (2–8°C)</option>
+            <option value="Ambient">Room Temp (15–25°C)</option>
+          </select>
 
-            <div className="flex items-center gap-1.5">
-              <select
-                value={selectedDosage}
-                onChange={(e) => setSelectedDosage(e.target.value)}
-                className="px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 focus:border-teal-600 transition-colors shadow-2xs"
-              >
-                <option value="all">All Dosage Forms</option>
-                <option value="Vial / Injection">Vials / Injections</option>
-                <option value="Cartridge / Pen">Cartridges / Pens</option>
-                <option value="Prefilled Syringe">Prefilled Syringes</option>
-                <option value="Infusion Bag">Infusion Bags</option>
-              </select>
-            </div>
+          <select
+            value={selectedDosage}
+            onChange={(e) => setSelectedDosage(e.target.value)}
+            className="h-14 px-4 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 transition-all outline-none cursor-pointer"
+            aria-label="Formulation"
+          >
+            <option value="all">Formulation</option>
+            <option value="Vial / Injection">Vials / Injections</option>
+            <option value="Cartridge / Pen">Cartridges / Pens</option>
+            <option value="Prefilled Syringe">Prefilled Syringes</option>
+            <option value="Infusion Bag">Infusion Bags</option>
+          </select>
 
-            <div className="flex items-center gap-1.5">
-              <select
-                value={selectedProximity}
-                onChange={(e) => setSelectedProximity(e.target.value)}
-                className="px-3 py-2 rounded-xl border border-slate-200 bg-white font-medium text-slate-700 focus:border-teal-600 transition-colors shadow-2xs"
-              >
-                <option value="all">Proximity: All Regions</option>
-                <option value="ncr">Local Fleet (&le; 25 km)</option>
-              </select>
-            </div>
-          </div>
+          <select
+            value={selectedProximity}
+            onChange={(e) => setSelectedProximity(e.target.value)}
+            className="h-14 px-4 rounded-xl border border-slate-200 bg-white text-sm font-medium text-slate-700 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/20 transition-all outline-none cursor-pointer"
+            aria-label="Radius"
+          >
+            <option value="all">Radius: All India</option>
+            <option value="ncr">Local Fleet (≤ 25 km)</option>
+          </select>
         </div>
 
-        {/* Quick Demo Filter Chips */}
-        <div className="pt-2 border-t border-slate-100 flex items-center gap-2 flex-wrap text-xs">
-          <span className="text-[11px] font-medium text-slate-400 mr-1">Quick Filters:</span>
+        {/* Quick Filter Chips */}
+        <div className="px-5 py-4 flex items-center gap-2.5 flex-wrap">
+          <span className="text-sm font-semibold text-slate-400 mr-1 shrink-0">Quick Filters:</span>
 
-          <button
-            onClick={() => setQuickFilter('all')}
-            className={`px-3 py-1.5 rounded-full font-medium transition-all ${
-              quickFilter === 'all'
-                ? 'bg-teal-700 text-white font-semibold shadow-2xs'
-                : 'bg-slate-100 hover:bg-slate-200/70 text-slate-600'
-            }`}
-          >
-            All Items ({marketplaceMedicines.length})
-          </button>
-
-          <button
-            onClick={() => setQuickFilter('cold')}
-            className={`px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 transition-all ${
-              quickFilter === 'cold'
-                ? 'bg-cyan-700 text-white font-semibold shadow-2xs'
-                : 'bg-slate-100 hover:bg-slate-200/70 text-slate-600'
-            }`}
-          >
-            <ThermometerSnowflake className="w-3.5 h-3.5" />
-            Cold-Chain Only
-          </button>
-
-          <button
-            onClick={() => setQuickFilter('concession')}
-            className={`px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 transition-all ${
-              quickFilter === 'concession'
-                ? 'bg-emerald-700 text-white font-semibold shadow-2xs'
-                : 'bg-slate-100 hover:bg-slate-200/70 text-slate-600'
-            }`}
-          >
-            <TrendingUp className="w-3.5 h-3.5" />
-            High Concession (&gt; 30% Off)
-          </button>
-
-          <button
-            onClick={() => setQuickFilter('near-expiry')}
-            className={`px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 transition-all ${
-              quickFilter === 'near-expiry'
-                ? 'bg-amber-600 text-white font-semibold shadow-2xs'
-                : 'bg-slate-100 hover:bg-slate-200/70 text-slate-600'
-            }`}
-          >
-            <AlertTriangle className="w-3.5 h-3.5" />
-            Near Expiry Salvage (&lt; 90 Days)
-          </button>
-
-          <button
-            onClick={() => setQuickFilter('proximity')}
-            className={`px-3 py-1.5 rounded-full font-medium flex items-center gap-1.5 transition-all ${
-              quickFilter === 'proximity'
-                ? 'bg-teal-700 text-white font-semibold shadow-2xs'
-                : 'bg-slate-100 hover:bg-slate-200/70 text-slate-600'
-            }`}
-          >
-            <MapPin className="w-3.5 h-3.5" />
-            Within 25 km
-          </button>
+          {[
+            { key: 'all' as QuickFilterType, label: `All Items (${marketplaceMedicines.length})`, color: 'teal', icon: null },
+            { key: 'cold' as QuickFilterType, label: 'Cold-Chain Only', color: 'cyan', icon: <ThermometerSnowflake className="w-4 h-4" /> },
+            { key: 'concession' as QuickFilterType, label: 'High Concession (> 30% Off)', color: 'emerald', icon: <TrendingUp className="w-4 h-4" /> },
+            { key: 'near-expiry' as QuickFilterType, label: 'Near Expiry Salvage (< 90 Days)', color: 'amber', icon: <AlertTriangle className="w-4 h-4" /> },
+            { key: 'proximity' as QuickFilterType, label: 'Within 25 km', color: 'teal', icon: <MapPin className="w-4 h-4" /> },
+          ].map(({ key, label, color, icon }) => {
+            const active = quickFilter === key;
+            const activeClasses: Record<string, string> = {
+              teal: 'bg-teal-700 text-white border-teal-700',
+              cyan: 'bg-cyan-700 text-white border-cyan-700',
+              emerald: 'bg-emerald-700 text-white border-emerald-700',
+              amber: 'bg-amber-600 text-white border-amber-600',
+            };
+            return (
+              <button
+                key={key}
+                onClick={() => setQuickFilter(key)}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-150 ${
+                  active
+                    ? activeClasses[color]
+                    : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+                }`}
+              >
+                {icon}
+                {label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      {/* 3. Catalog Cards Grid (Refactored Card Architecture) */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ── 3. MEDICINE CARDS GRID ── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {filteredMedicines.length === 0 ? (
-          <div className="col-span-3 py-16 text-center text-slate-500 bg-white rounded-2xl border border-slate-200 shadow-2xs">
-            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2 text-slate-400">
-              <Search className="w-5 h-5" />
+          <div className="col-span-3 py-20 text-center bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <div className="w-14 h-14 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4">
+              <Search className="w-6 h-6 text-slate-400" />
             </div>
-            <div className="font-semibold text-slate-800 text-sm">No surplus medicines found</div>
-            <p className="text-xs text-slate-500 mt-1">Try resetting the quick filters or search term.</p>
+            <div className="text-lg font-semibold text-slate-800">No surplus medicines found</div>
+            <p className="text-sm text-slate-500 mt-1.5">Try resetting the quick filters or adjusting your search.</p>
             <button
               onClick={() => {
                 setSearchQuery('');
@@ -292,7 +257,7 @@ export const MarketplacePage: React.FC = () => {
                 setSelectedDosage('all');
                 setSelectedProximity('all');
               }}
-              className="mt-3 px-3.5 py-1.5 rounded-lg bg-teal-700 text-white text-xs font-semibold"
+              className="mt-5 px-5 py-2.5 rounded-xl bg-teal-700 hover:bg-teal-800 text-white text-sm font-semibold transition-colors"
             >
               Reset Filters
             </button>
@@ -302,116 +267,129 @@ export const MarketplacePage: React.FC = () => {
             const daysLeft = getDaysUntilExpiry(med.expiryDate);
             const monthsLeft = Math.max(1, Math.round(daysLeft / 30));
             const distance = getDistanceKm(med.hospitalLocation);
-
-            // Traffic-light expiry badge
             const isNearExpiry = daysLeft <= 90;
             const isLongExpiry = monthsLeft >= 6;
+            const expiryLabel = isNearExpiry
+              ? `Near Expiry — ${daysLeft} days`
+              : `Expires: ${formatExpiryDate(med.expiryDate)}`;
+            const isColdChain = med.storageCondition.includes('Cold');
 
             return (
               <Tilt3DCard
                 key={med.id}
-                maxTilt={4}
-                className="bg-white rounded-2xl border border-slate-100 hover:border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all p-6 flex flex-col justify-between"
+                maxTilt={3}
+                className="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_24px_rgba(0,0,0,0.05)] hover:shadow-xl hover:-translate-y-1 transition-all duration-200 flex flex-col"
               >
-                <div>
-                  {/* A. Card Header: Hospital name + distance chip + Traffic Light Expiry Badge */}
-                  <div className="flex items-start justify-between gap-3 pb-3.5 border-b border-slate-100">
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="font-semibold text-xs text-slate-800 truncate" title={med.hospitalName}>
-                          {med.hospitalName}
-                        </span>
-                        <span title="Verified Hospital Node">
-                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                        </span>
-                      </div>
-                      <div className="mt-1">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">
-                          <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                          {distance} km away
-                        </span>
-                      </div>
+                {/* ── TOP UTILITY ROW ── */}
+                <div className="flex items-center justify-between px-7 pt-6 pb-5 border-b border-slate-100">
+                  <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                    <div className="w-8 h-8 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center shrink-0">
+                      <Building2 className="w-4 h-4 text-teal-700" />
                     </div>
-
-                    {/* Expiry Badge with Traffic Light Colors */}
-                    <span
-                      className={`text-xs px-2.5 py-1 rounded-full border shrink-0 ${
-                        isNearExpiry
-                          ? 'bg-amber-50 text-amber-900 border-amber-300 font-semibold'
-                          : isLongExpiry
-                          ? 'bg-emerald-50 text-emerald-800 border-emerald-200/80 font-medium'
-                          : 'bg-slate-100 text-slate-700 border-slate-200 font-medium'
-                      }`}
-                    >
-                      {isNearExpiry ? `Near Expiry (${daysLeft} days)` : `Expires in ${monthsLeft} mos`}
-                    </span>
-                  </div>
-
-                  {/* B. Medicine Title & Composition */}
-                  <div className="mt-4">
-                    <h3 className="text-[18px] font-bold text-slate-900 font-sans tracking-tight leading-snug">
-                      {med.brandName}
-                    </h3>
-                    <div className="text-xs text-slate-500 font-normal tracking-wide line-clamp-1 mt-1">
-                      {med.genericComposition}
+                    <div className="min-w-0">
+                      <div className="text-base font-semibold text-slate-800 truncate leading-tight">
+                        {med.hospitalName}
+                      </div>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                        <span className="text-sm text-slate-500">{distance} km away</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* C. Key Clinical Attributes (Clean Rounded Pill Tags) */}
-                  <div className="mt-4 flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200/60">
-                      {med.dosageForm.includes('Vial') ? 'Vial • IV Injection' : `${med.dosageForm} • ${med.strength}`}
-                    </span>
-
-                    {med.storageCondition.includes('Cold') ? (
-                      <span className="px-2.5 py-1 rounded-full bg-cyan-50 text-cyan-800 text-xs font-medium border border-cyan-200 flex items-center gap-1.5">
-                        <ThermometerSnowflake className="w-3.5 h-3.5 text-cyan-600" />
-                        Cold-Chain (2°C - 8°C)
-                      </span>
-                    ) : (
-                      <span className="px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200/60">
-                        Room Temp
-                      </span>
-                    )}
-
-                    <span className="text-[11px] font-mono text-slate-400 px-2 py-0.5 rounded-md bg-slate-50 border border-slate-200/40">
-                      Batch #{med.batchNumber}
-                    </span>
-                  </div>
-
-                  {/* D. Transparent Pricing & Concession (The "Why SIH Cares" Block) */}
-                  <div className="mt-5 pt-4 border-t border-slate-100">
-                    <div className="flex items-baseline justify-between">
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-bold text-slate-900 font-sans tracking-tight">
-                          ₹{med.transferPricePerUnit.toLocaleString()}
-                        </span>
-                        <span className="text-xs text-slate-400 font-normal">/ unit</span>
-                        <span className="line-through text-slate-400 text-xs font-normal ml-1">
-                          MRP ₹{med.mrpPerUnit.toLocaleString()}
-                        </span>
-                      </div>
-
-                      <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
-                        Save {med.concessionPercentage}%
-                      </span>
-                    </div>
+                  {/* Verified badge */}
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold shrink-0 ml-3">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    NABH Verified
                   </div>
                 </div>
 
-                {/* Bottom row: Stock remaining + Action Button */}
-                <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs text-slate-500 font-medium">
-                    <strong className="text-slate-800 font-semibold">{med.availableUnits}</strong> units available
+                {/* ── CORE CLINICAL IDENTITY ── */}
+                <div className="px-7 my-5">
+                  <h3 className="text-2xl font-bold text-slate-900 leading-snug">
+                    {med.brandName}
+                  </h3>
+                  <p className="text-sm md:text-base text-slate-600 font-medium leading-normal mt-1.5 line-clamp-2">
+                    {med.genericComposition}
+                  </p>
+                </div>
+
+                {/* ── ATTRIBUTE TAG RIBBON ── */}
+                <div className="px-7 flex flex-wrap items-center gap-2.5 pb-1">
+                  {/* Temperature / Storage Tag */}
+                  {isColdChain ? (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-cyan-50 border border-cyan-200 text-cyan-800 text-sm font-semibold">
+                      <ThermometerSnowflake className="w-4 h-4 text-cyan-600" />
+                      Cold-Chain (2°C – 8°C)
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-sm font-semibold">
+                      Room Temp (15–25°C)
+                    </span>
+                  )}
+
+                  {/* Form / Strength Tag */}
+                  <span className="px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-sm font-semibold">
+                    {med.dosageForm.includes('Vial') ? `${med.strength} IV Vial` : `${med.dosageForm} • ${med.strength}`}
                   </span>
 
-                  <button
-                    onClick={() => handleOpenRequest(med)}
-                    className="px-4 py-2 rounded-xl bg-teal-800 hover:bg-teal-900 text-white text-xs font-semibold shadow-xs flex items-center gap-1.5 transition-all hover:translate-x-0.5 cursor-pointer"
-                  >
-                    <span>Request Transfer</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  {/* Expiry Badge with traffic-light color dot */}
+                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-sm font-semibold ${
+                    isNearExpiry
+                      ? 'bg-amber-50 border-amber-300 text-amber-900'
+                      : isLongExpiry
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                      : 'bg-slate-50 border-slate-200 text-slate-700'
+                  }`}>
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${
+                      isNearExpiry ? 'bg-amber-500' : isLongExpiry ? 'bg-emerald-500' : 'bg-slate-400'
+                    }`} />
+                    <CalendarClock className="w-3.5 h-3.5 shrink-0" />
+                    {expiryLabel}
+                  </span>
+
+                  {/* Batch number — monospace only for regulatory ID */}
+                  <span className="px-2.5 py-1 rounded-md bg-slate-50 border border-slate-200 font-mono text-xs text-slate-400">
+                    Batch #{med.batchNumber}
+                  </span>
+                </div>
+
+                {/* ── COMMERCIAL & CONVERSION FOOTER ── */}
+                <div className="mx-7 mt-6 mb-7 bg-slate-50/80 rounded-2xl border border-slate-100 p-5">
+                  <div className="flex items-end justify-between gap-4">
+                    {/* Pricing block */}
+                    <div>
+                      <div className="flex items-baseline gap-2 flex-wrap">
+                        <span className="text-3xl font-extrabold text-emerald-950 tracking-tight">
+                          ₹{med.transferPricePerUnit.toLocaleString()}
+                        </span>
+                        <span className="text-base text-slate-500 font-normal">/ unit</span>
+                      </div>
+                      <div className="flex items-center gap-2.5 mt-1.5 flex-wrap">
+                        <span className="text-base text-slate-400 line-through">
+                          MRP ₹{med.mrpPerUnit.toLocaleString()}
+                        </span>
+                        <span className="text-sm font-bold bg-emerald-100 text-emerald-800 px-3 py-1 rounded-full">
+                          Save {med.concessionPercentage}%
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Stock + CTA block */}
+                    <div className="flex flex-col items-end gap-2.5 shrink-0">
+                      <div className="flex items-center gap-1.5 text-sm text-slate-500 font-medium">
+                        <PackageCheck className="w-4 h-4 text-teal-600" />
+                        <strong className="text-slate-800 font-semibold">{med.availableUnits}</strong> units left
+                      </div>
+                      <button
+                        onClick={() => handleOpenRequest(med)}
+                        className="h-12 px-6 text-base font-semibold rounded-xl bg-teal-800 hover:bg-teal-900 text-white shadow-sm flex items-center gap-2 transition-all duration-200 hover:shadow-md active:scale-[0.98] cursor-pointer"
+                      >
+                        Request Transfer
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </Tilt3DCard>
             );
@@ -419,7 +397,7 @@ export const MarketplacePage: React.FC = () => {
         )}
       </div>
 
-      {/* SIH Impact Audit Modal (for Judges) */}
+      {/* ── SIH IMPACT AUDIT MODAL ── */}
       <Modal
         isOpen={showImpactModal}
         onClose={() => setShowImpactModal(false)}
@@ -427,59 +405,52 @@ export const MarketplacePage: React.FC = () => {
         subtitle="Live algorithmic impact accounting for inter-hospital medicine redistribution"
         maxWidth="xl"
       >
-        <div className="space-y-4 text-xs font-sans">
-          <div className="grid grid-cols-3 gap-3">
-            <div className="p-3.5 rounded-xl bg-teal-50 border border-teal-200">
-              <div className="text-[10px] uppercase font-semibold text-teal-800">Total Units Saved</div>
-              <div className="text-xl font-bold text-teal-950 mt-0.5">4,210 Units</div>
-              <div className="text-[11px] text-teal-700 mt-1">Across 18 regional hospital nodes</div>
+        <div className="space-y-5">
+          <div className="grid grid-cols-3 gap-4">
+            <div className="p-4 rounded-xl bg-teal-50 border border-teal-200">
+              <div className="text-xs uppercase font-semibold tracking-wider text-teal-700">Total Units Saved</div>
+              <div className="text-2xl font-extrabold text-teal-950 mt-1">4,210 Units</div>
+              <div className="text-sm text-teal-700 mt-1">Across 18 regional hospital nodes</div>
             </div>
-
-            <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
-              <div className="text-[10px] uppercase font-semibold text-emerald-800">Net Cost Conserved</div>
-              <div className="text-xl font-bold text-emerald-950 mt-0.5">₹14.82 Lakhs</div>
-              <div className="text-[11px] text-emerald-700 mt-1">Direct savings for patients & hospitals</div>
+            <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200">
+              <div className="text-xs uppercase font-semibold tracking-wider text-emerald-700">Net Cost Conserved</div>
+              <div className="text-2xl font-extrabold text-emerald-950 mt-1">₹14.82 Lakhs</div>
+              <div className="text-sm text-emerald-700 mt-1">Direct savings for patients & hospitals</div>
             </div>
-
-            <div className="p-3.5 rounded-xl bg-cyan-50 border border-cyan-200">
-              <div className="text-[10px] uppercase font-semibold text-cyan-800">Zero Expiry Wastage</div>
-              <div className="text-xl font-bold text-cyan-950 mt-0.5">0 Diverted to Landfill</div>
-              <div className="text-[11px] text-cyan-700 mt-1">100% salvaged or bioremediated</div>
+            <div className="p-4 rounded-xl bg-cyan-50 border border-cyan-200">
+              <div className="text-xs uppercase font-semibold tracking-wider text-cyan-700">Zero Expiry Wastage</div>
+              <div className="text-2xl font-extrabold text-cyan-950 mt-1">0 to Landfill</div>
+              <div className="text-sm text-cyan-700 mt-1">100% salvaged or bioremediated</div>
             </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
-            <div className="font-bold text-slate-800 text-sm flex items-center gap-2">
-              <ShieldCheck className="w-4 h-4 text-teal-700" />
+          <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+            <div className="text-base font-bold text-slate-800 flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-teal-700" />
               Why the MedEx Model Works for Smart India Hackathon
             </div>
-            <p className="text-slate-600 leading-relaxed">
+            <p className="text-sm text-slate-600 leading-relaxed">
               In standard procurement, critical formulations (such as IV Ceftriaxone, Meropenem, and Enoxaparin) often expire unused in one tertiary hospital while neighbouring secondary centers experience acute stockouts. MedEx automates inter-hospital inventory visibility with strict CDSCO compliance and cold-chain temperature monitoring.
             </p>
-            <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200">
-              <div className="flex items-center gap-2 text-slate-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>CDSCO Form 20B/21B Wholesale Compliance</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>CPCB Biomedical Waste Neutralization Logging</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Automated 30-Day Expiry Regulatory Lockout</span>
-              </div>
-              <div className="flex items-center gap-2 text-slate-700 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>IoT Cold-Chain Telemetry Verification (2°C - 8°C)</span>
-              </div>
+            <div className="grid grid-cols-2 gap-2.5 pt-3 border-t border-slate-200">
+              {[
+                'CDSCO Form 20B/21B Wholesale Compliance',
+                'CPCB Biomedical Waste Neutralization Logging',
+                'Automated 30-Day Expiry Regulatory Lockout',
+                'IoT Cold-Chain Telemetry Verification (2°C – 8°C)',
+              ].map((item) => (
+                <div key={item} className="flex items-start gap-2 text-sm text-slate-700 font-medium">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </div>
+              ))}
             </div>
           </div>
 
-          <div className="flex justify-end pt-2">
+          <div className="flex justify-end pt-1">
             <button
               onClick={() => setShowImpactModal(false)}
-              className="px-4 py-2 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-semibold text-xs transition-colors cursor-pointer"
+              className="h-11 px-6 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-semibold text-sm transition-colors cursor-pointer"
             >
               Close Audit View
             </button>
@@ -487,7 +458,7 @@ export const MarketplacePage: React.FC = () => {
         </div>
       </Modal>
 
-      {/* Request Transfer Action Modal */}
+      {/* ── REQUEST TRANSFER MODAL ── */}
       <Modal
         isOpen={!!selectedMedicine}
         onClose={() => setSelectedMedicine(null)}
@@ -496,20 +467,20 @@ export const MarketplacePage: React.FC = () => {
         maxWidth="lg"
       >
         {selectedMedicine && (
-          <form onSubmit={handleConfirmRequest} className="space-y-4 text-xs">
-            <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
-              <div className="font-bold text-slate-900 text-sm">{selectedMedicine.brandName} ({selectedMedicine.strength})</div>
-              <div className="text-slate-500 mt-0.5">{selectedMedicine.genericComposition}</div>
-              <div className="font-mono text-slate-600 text-[11px] mt-2">
+          <form onSubmit={handleConfirmRequest} className="space-y-5">
+            <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+              <div className="font-bold text-slate-900 text-base">{selectedMedicine.brandName} ({selectedMedicine.strength})</div>
+              <div className="text-sm text-slate-600 mt-0.5">{selectedMedicine.genericComposition}</div>
+              <div className="font-mono text-slate-500 text-xs mt-2">
                 Batch: {selectedMedicine.batchNumber} • Expiry: {selectedMedicine.expiryDate} • Storage: {selectedMedicine.storageCondition}
               </div>
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1 font-sans">
+              <label className="block text-sm font-semibold text-slate-700 mb-2">
                 Requested Quantity (Units) *
               </label>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <input
                   type="number"
                   min="1"
@@ -517,54 +488,55 @@ export const MarketplacePage: React.FC = () => {
                   required
                   value={requestedUnits}
                   onChange={(e) => setRequestedUnits(Math.min(selectedMedicine.availableUnits, Math.max(1, Number(e.target.value))))}
-                  className="w-32 font-sans font-bold text-sm px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-teal-600 bg-white"
+                  className="w-36 font-bold text-base px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-teal-600 bg-white outline-none"
                 />
-                <span className="text-slate-500 font-sans">
-                  Max available: {selectedMedicine.availableUnits} units
+                <span className="text-sm text-slate-500">
+                  Max available: <strong className="text-slate-800">{selectedMedicine.availableUnits}</strong> units
                 </span>
               </div>
             </div>
 
             {/* Financial Summary */}
-            <div className="p-4 rounded-xl bg-teal-50/80 border border-teal-200 text-teal-950 font-sans space-y-1.5">
-              <div className="flex justify-between">
+            <div className="p-4 rounded-xl bg-teal-50/80 border border-teal-200 text-teal-950 space-y-2">
+              <div className="flex justify-between text-sm">
                 <span>Unit Rate:</span>
-                <span className="font-semibold">₹{selectedMedicine.transferPricePerUnit}</span>
+                <span className="font-semibold">₹{selectedMedicine.transferPricePerUnit.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-sm">
                 <span>Base Requisition Total:</span>
                 <span className="font-bold">₹{(selectedMedicine.transferPricePerUnit * requestedUnits).toLocaleString()}</span>
               </div>
-              <div className="flex justify-between text-teal-700 text-[11px]">
+              <div className="flex justify-between text-xs text-teal-700">
                 <span>Platform Compliance & Escrow Fee (2%):</span>
-                <span>₹{Math.round(selectedMedicine.transferPricePerUnit * requestedUnits * 0.02)}</span>
+                <span>₹{Math.round(selectedMedicine.transferPricePerUnit * requestedUnits * 0.02).toLocaleString()}</span>
               </div>
-              <div className="pt-2 border-t border-teal-200 flex justify-between font-bold text-sm text-teal-950">
+              <div className="pt-2 border-t border-teal-200 flex justify-between font-bold text-base text-teal-950">
                 <span>Estimated Net Payable:</span>
                 <span>₹{Math.round(selectedMedicine.transferPricePerUnit * requestedUnits * 1.02).toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-blue-50 border border-blue-200 text-blue-950 text-[11px] flex items-start gap-2">
-              <Clock className="w-4 h-4 text-blue-700 shrink-0 mt-0.5" />
+            <div className="p-3.5 rounded-xl bg-blue-50 border border-blue-200 text-blue-900 text-sm flex items-start gap-2.5">
+              <Clock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
               <span>
-                Requisition is sent directly to the seller hospital's Chief Pharmacist. Upon approval, you can pay via Razorpay Escrow to trigger immediate refrigerated dispatch.
+                Requisition is sent directly to the seller hospital's Chief Pharmacist. Upon approval, pay via Razorpay Escrow to trigger immediate refrigerated dispatch.
               </span>
             </div>
 
-            <div className="pt-3 border-t border-slate-200 flex justify-end gap-2">
+            <div className="pt-3 border-t border-slate-200 flex justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setSelectedMedicine(null)}
-                className="px-4 py-2 text-xs font-medium text-slate-600 hover:text-slate-800"
+                className="px-5 py-2.5 text-sm font-medium text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-lg bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 btn-3d"
+                className="h-11 px-6 rounded-xl bg-teal-700 hover:bg-teal-800 text-white font-bold text-sm shadow-sm flex items-center gap-2 transition-colors"
               >
-                <Send className="w-3.5 h-3.5" /> Dispatch Requisition
+                <Send className="w-4 h-4" />
+                Dispatch Requisition
               </button>
             </div>
           </form>
